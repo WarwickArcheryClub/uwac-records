@@ -104,5 +104,8 @@ docs/_build/
 # PyBuilder
 target/
 
-
+# Sensitive config file
 config.py
+
+# Static files that aren't necessary except for development
+static/

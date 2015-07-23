@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}UWAC Records{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div>
+            <h1 id="browse-tab" class="small-6 columns form-tab text-left active"><a href="#browse">Browse</a></h1>
+            <h1 id="submit-tab" class="small-6 columns form-tab text-right"><a href="#submit">Submit</a></h1>
+        </div>
+        <div class="small-12 columns content-active" id="browse">
+            <h4>Start typing a name, event or round in the form below.</h4>
+            <form>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <div class="row collapse postfix-radius">
+                            <div class="small-10 medium-11 columns">
+                                <input type="text" id="search-input" class="autocomplete-input" placeholder="A name, round or event" autofocus>
+                            </div>
+                            <div class="small-2 medium-1 columns">
+                                <button type="submit" id="submit-button" class="no-padding button postfix">Go</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="small-12 columns" id="submit">
+            <form>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <h5>Archer info</h5>
+                    </div>
+                    <div class="medium-12 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-3 medium-1 columns">
+                                <span class="prefix">Archer</span>
+                            </div>
+                            <div class="small-9 medium-11 columns">
+                                <input type="text" id="archer-input" class="autocomplete-input step" placeholder="Archer's name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <h5 class="score-title">Score details</h5>
+                    </div>
+                    <div class="medium-5 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-3 columns">
+                                <span class="prefix">Round</span>
+                            </div>
+                            <div class="small-9 columns">
+                                <input type="text" id="round-input" class="autocomplete-input" placeholder="Round name e.g.: Bray I">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="medium-3 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-3 columns">
+                                <span class="prefix">Style</span>
+                            </div>
+                            <div class="small-9 columns">
+                                <select>
+                                    <option value="4">Recurve</option>
+                                    <option value="1">Barebow</option>
+                                    <option value="2">Compound</option>
+                                    <option value="3">Longbow</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="medium-4 large-4 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-3 columns">
+                                <span class="prefix">Date</span>
+                            </div>
+                            <div class="small-9 columns">
+                                <input type="date" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-6 medium-3 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-3 columns">
+                                <span class="prefix">Hits</span>
+                            </div>
+                            <div class="small-9 columns">
+                                <input type="number" id="score-hits" placeholder="" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="small-6 medium-3 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-3 columns">
+                                <span class="prefix">Score</span>
+                            </div>
+                            <div class="small-9 columns">
+                                <input type="number" id="score-score" placeholder="" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="small-6 medium-3 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-3 columns">
+                                <span class="prefix">Golds</span>
+                            </div>
+                            <div class="small-9 columns">
+                                <input type="number" id="score-golds" placeholder="" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="small-6 medium-3 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-3 columns">
+                                <span class="prefix">Xs</span>
+                            </div>
+                            <div class="small-9 columns">
+                                <input type="number" id="score-xs" placeholder="" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <button class="button radius small pull-right" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
+            <h1>Club records</h1>
+            <ul class="tabs" data-tab>
+                <li class="tab-title active"><a href="#indoors">Indoors</a></li>
+                <li class="tab-title"><a href="#outdoors">Outdoors</a></li>
+            </ul>
+            <div class="tabs-content">
+                <div class="content active" id="indoors">
+                    <h3 class="bottom-divider">Individual</h3>
+                    <h3 class="bottom-divider">Team</h3>
+                </div>
+                <div class="content" id="outdoors">
+                    <h3 class="bottom-divider">Individual</h3>
+                    <h3 class="bottom-divider">Team</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
+{% endblock %}

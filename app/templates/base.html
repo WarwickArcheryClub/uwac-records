@@ -1,98 +1,98 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" />
 
-        <script src="{{ url_for('static', 'bower_components/modernizr/modernizr.js') }}"></script>
+    <script src="{{ url_for('static', filename='bower_components/modernizr/modernizr.js') }}"></script>
 
-        <title>{% block title %}{% endblock %}</title>
-    </head>
-    <body>
-        <section class="contain-to-grid sticky">
-            <nav class="top-bar" data-topbar role="navigation">
-                <ul class="title-area">
-                    <li class="name">
-                        <h1><a href="#">UWAC</a></h1>
-                    </li>
-                    <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
-                </ul>
-                <section class="top-bar-section">
-                    <ul class="left">
-                        <li><a href="https://tankski.co.uk/">Home</a></li>
-                        <li class=""><a href="#">The Club</a></li>
-                        <li class=""><a href="#">Exec</a></li>
-                        <li class=""><a href="#">Sessions</a></li>
-                        <li class=""><a href="#">Competitons</a></li>
-                        <li class="active"><a href="/">Records</a></li>
-                        <li class=""><a href="">Contact Us</a></li>
-                    </ul>
-                </section>
-            </nav>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<section class="contain-to-grid sticky">
+    <nav class="top-bar" data-topbar role="navigation">
+        <ul class="title-area">
+            <li class="name">
+                <h1><a href="#">UWAC</a></h1>
+            </li>
+            <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+        </ul>
+        <section class="top-bar-section">
+            <ul class="left">
+                <li><a href="https://tankski.co.uk/">Home</a></li>
+                <li class=""><a href="#">The Club</a></li>
+                <li class=""><a href="#">Exec</a></li>
+                <li class=""><a href="#">Sessions</a></li>
+                <li class=""><a href="#">Competitons</a></li>
+                <li class="active"><a href="/">Records</a></li>
+                <li class=""><a href="">Contact Us</a></li>
+            </ul>
         </section>
+    </nav>
+</section>
 
-        <section id="main-content">
-            {% block main-content %}{% endblock %}
-        </section>
+<section id="main-content">
+    {% block main_content %}{% endblock %}
+</section>
 
-        <footer class="footer">
-            <div class="row">
-                <div class="small-12 large-4 columns">
-                    <h5>University of Warwick Archery Club</h5>
-                    <ul class="social-list">
-                        <li><a href="#"><span class="fa fa-facebook-square fa-2x"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square fa-2x"></span></a></li>
+<footer class="footer">
+    <div class="row">
+        <div class="small-12 large-4 columns">
+            <h5>University of Warwick Archery Club</h5>
+            <ul class="social-list">
+                <li><a href="#"><span class="fa fa-facebook-square fa-2x"></span></a></li>
+                <li><a href="#"><span class="fa fa-twitter-square fa-2x"></span></a></li>
+            </ul>
+        </div>
+        <div class="small-12 large-8 columns">
+            <ul class="sitemap-list">
+                <li><a href="#">News</a></li>
+                <li>
+                    <a href="#">The Club</a>
+                    <ul class="no-bullet">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Achievements</a></li>
+                        <li><a href="#">Exec</a></li>
+                        <li><a href="#">History</a></li>
+                        <li><a href="#">Calendar</a></li>
                     </ul>
-                </div>
-                <div class="small-12 large-8 columns">
-                    <ul class="sitemap-list">
-                        <li><a href="#">News</a></li>
-                        <li>
-                            <a href="#">The Club</a>
-                            <ul class="no-bullet">
-                                <li><a href="#">About</a></li>
-                                <li><a href="#">Achievements</a></li>
-                                <li><a href="#">Exec</a></li>
-                                <li><a href="#">History</a></li>
-                                <li><a href="#">Calendar</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#">Sessions</a></li>
-                        <li>
-                            <a href="#">Competitions</a>
-                            <ul class="no-bullet">
-                                <li><a href="#">W.O.N.T.</a></li>
-                                <li><a href="#">Postal &amp; E-leagues</a></li>
-                                <li><a href="#">Regionals</a></li>
-                                <li><a href="#">Nationals</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#">Records</a></li>
-                        <li><a href="#">Submit Score</a></li>
-                        <li><a href="#">Contact</a></li>
+                </li>
+                <li><a href="#">Sessions</a></li>
+                <li>
+                    <a href="#">Competitions</a>
+                    <ul class="no-bullet">
+                        <li><a href="#">W.O.N.T.</a></li>
+                        <li><a href="#">Postal &amp; E-leagues</a></li>
+                        <li><a href="#">Regionals</a></li>
+                        <li><a href="#">Nationals</a></li>
                     </ul>
-                </div>
-            </div>
-            <div class="row">
-                <p class="credits text-center">
-                    Copyright &copy; University of Warwick Archery Club. Built by <a href="#">David Richardson</a>. Powered by <a href="#">Ghost</a> and <a href="#">Flask</a>.
-                </p>
-            </div>
-        </footer>
+                </li>
+                <li><a href="#">Records</a></li>
+                <li><a href="#">Submit Score</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <p class="credits text-center">
+            Copyright &copy; University of Warwick Archery Club. Built by <a href="#">David Richardson</a>. Powered by <a href="#">Ghost</a> and <a href="#">Flask</a>.
+        </p>
+    </div>
+</footer>
 
-        <script src="{{ url_for('static', 'bower_components/jquery/dist/jquery.min.js') }}"></script>
-        <script src="{{ url_for('static', 'bower_components/slick-carousel/slick/slick.min.js') }}"></script>
-        <script src="{{ url_for('static', 'bower_components/foundation/js/foundation.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/slick-carousel/slick/slick.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/foundation/js/foundation.min.js') }}"></script>
 
-        <script src="{{ url_for('static', 'js/app.js') }}"></script>
-        <script src="{{ url_for('static', 'js/jquery.autocomplete.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
 
-        {% block extra-js %}{% endblock %}
+{% block extra_js %}{% endblock %}
 
-    </body>
+</body>
 </html>

@@ -6,7 +6,7 @@ UWAC Records System
 * Set up a virtualenv using pip's `virtualenv` package,
 * Install postgresql and set it up,
 * Run `pip install -r requirements.txt`,
-* Configure using `config.samply.py` as a base, setting database URIs and secret keys,
+* Configure using `config.sample.py` as a base, setting database URIs and secret keys,
 * Run `run.py`
 
 You should now have a working system running on 0.0.0.0:5000!

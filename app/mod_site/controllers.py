@@ -10,9 +10,11 @@ def home():
         db.or_(IndividualRecords.round_type == 'Indoors', IndividualRecords.round_type == 'WA Indoors')).order_by(
         IndividualRecords.round_name, db.desc(IndividualRecords.category), db.desc(IndividualRecords.bow_type),
         IndividualRecords.gender, db.desc(IndividualRecords.score)).all()
+
     outdoor_indiv_scores = IndividualRecords.query.filter(db.not_(
         db.or_(IndividualRecords.round_type == 'Indoors', IndividualRecords.round_type == 'WA Indoors'))).order_by(
         IndividualRecords.round_name, db.desc(IndividualRecords.category), db.desc(IndividualRecords.bow_type),
         IndividualRecords.gender, db.desc(IndividualRecords.score)).all()
+
     return render_template('site/index.html', indoor_indiv_scores=indoor_indiv_scores,
                            outdoor_indiv_scores=outdoor_indiv_scores)

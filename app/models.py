@@ -155,3 +155,6 @@ class Archers(db.Model):
     def __repr__(self):
         return "<Archer name: {} {} id: {} card_num: {}>".format(self.first_name, self.last_name, self.id,
                                                                  self.card_number)
+
+    def get_name(self):
+        return self.first_name + " " + self.last_name

@@ -2,20 +2,27 @@
 
 {% block title %}UWAC Records{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/responsive-tables.css') }}"/>
+{% endblock %}
+
 {% block main_content %}
     <div class="row">
         <div>
             <h1 id="browse-tab" class="small-6 columns form-tab text-left active"><a href="#browse">Browse</a></h1>
+
             <h1 id="submit-tab" class="small-6 columns form-tab text-right"><a href="#submit">Submit</a></h1>
         </div>
         <div class="small-12 columns content-active" id="browse">
             <h4>Start typing a name, event or round in the form below.</h4>
+
             <form>
                 <div class="row">
                     <div class="small-12 columns">
                         <div class="row collapse postfix-radius">
                             <div class="small-10 medium-11 columns">
-                                <input type="text" id="search-input" class="autocomplete-input" placeholder="A name, round or event" autofocus>
+                                <input type="text" id="search-input" class="autocomplete-input"
+                                       placeholder="A name, round or event" autofocus>
                             </div>
                             <div class="small-2 medium-1 columns">
                                 <button type="submit" id="submit-button" class="no-padding button postfix">Go</button>
@@ -37,7 +44,8 @@
                                 <span class="prefix">Archer</span>
                             </div>
                             <div class="small-9 medium-11 columns">
-                                <input type="text" id="archer-input" class="autocomplete-input step" placeholder="Archer's name">
+                                <input type="text" id="archer-input" class="autocomplete-input step"
+                                       placeholder="Archer's name">
                             </div>
                         </div>
                     </div>
@@ -52,7 +60,8 @@
                                 <span class="prefix">Round</span>
                             </div>
                             <div class="small-9 columns">
-                                <input type="text" id="round-input" class="autocomplete-input" placeholder="Round name e.g.: Bray I">
+                                <input type="text" id="round-input" class="autocomplete-input"
+                                       placeholder="Round name e.g.: Bray I">
                             </div>
                         </div>
                     </div>
@@ -142,10 +151,64 @@
             <div class="tabs-content">
                 <div class="content active" id="indoors">
                     <h3 class="bottom-divider">Individual</h3>
+
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <table class="responsive full-width">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Round</th>
+                                    <th>Score/Golds</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for score in indoor_indiv_scores %}
+                                    <tr>
+                                        <td>{{ score.archer_name }}</td>
+                                        <td>{{ score.round_name }}</td>
+                                        <td>{{ "{}/{}".format(score.score, (score.num_golds if score.num_golds else 0)) }}</td>
+                                        <td>{{ "{} {} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies"), score.bow_type) }}</td>
+                                        <td>{{ score.date }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <h3 class="bottom-divider">Team</h3>
                 </div>
                 <div class="content" id="outdoors">
                     <h3 class="bottom-divider">Individual</h3>
+
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <table class="responsive full-width">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Round</th>
+                                    <th>Score/Golds</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for score in outdoor_indiv_scores %}
+                                    <tr>
+                                        <td>{{ score.archer_name }}</td>
+                                        <td>{{ score.round_name }}</td>
+                                        <td>{{ "{}/{}".format(score.score, (score.num_golds if score.num_golds else 0)) }}</td>
+                                        <td>{{ "{} {} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies"), score.bow_type) }}</td>
+                                        <td>{{ score.date }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <h3 class="bottom-divider">Team</h3>
                 </div>
             </div>
@@ -155,4 +218,5 @@
 
 {% block extra_js %}
     <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
 {% endblock %}

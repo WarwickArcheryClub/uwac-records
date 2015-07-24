@@ -1,10 +1,8 @@
 from app import db
 
 
-class Score(db.Model):
-    __tablename__ = 'scores'
-
-    id = db.column(db.Integer, primary_key=True)
+class Scores(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     archer_id = db.Column(db.Integer, db.ForeignKey('archers.id'), nullable=False)
     round_id = db.Column(db.Integer, db.ForeignKey('rounds.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
@@ -30,13 +28,37 @@ class Score(db.Model):
         self.date = date
 
     def __repr__(self):
-        return '<Score id: %d score: %d hits: %d golds: %d date: %s>'.format(self.id, self.score, self.num_hits,
+        return '<Score id: {} score: {} hits: {} golds: {} date: {}>'.format(self.id, self.score, self.num_hits,
                                                                              self.num_golds, self.date)
 
 
-class Classification(db.Model):
-    __tablename__ = 'classifications'
+class IndividualRecords(db.Model):
+    __tablename__ = 'individual_records'
 
+    archer_name = db.Column(db.String(255), primary_key=True)
+    score = db.Column(db.Integer, primary_key=True)
+    round_name = db.Column(db.String(255), primary_key=True)
+    num_golds = db.Column(db.Integer, primary_key=True)
+    round_type = db.Column(db.Enum('Imperial', 'Metric', 'WA Outdoors', 'WA Indoors', 'Clout', 'Indoors',
+                                   name='ROUND_TYPE'), primary_key=True)
+    bow_type = db.Column(db.String(255), primary_key=True)
+    gender = db.Column(db.Enum('F', 'M', name='GENDER'), primary_key=True)
+    category = db.Column(db.Enum('Novice', 'Experienced', name='CATEGORY'), primary_key=True)
+    date = db.Column(db.Date, primary_key=False)
+
+    def __init__(self, archer_name, score, round_name, num_golds, round_type, bow_type, gender, category, date):
+        self.archer_name = archer_name
+        self.round_name = round_name
+        self.score = score
+        self.num_golds = num_golds
+        self.round_type = round_type
+        self.bow_type = bow_type
+        self.gender = gender
+        self.category = category
+        self.date = date
+
+
+class Classifications(db.Model):
     round_id = db.Column(db.Integer, db.ForeignKey('rounds.id'), primary_key=True)
     bow_type = db.Column(db.Integer, db.ForeignKey('bow_types.id'), primary_key=True)
     gender = db.Column(db.Enum('F', 'M', name='GENDER'), primary_key=True)
@@ -64,12 +86,10 @@ class Classification(db.Model):
         self.class_h = class_h
 
     def __repr__(self):
-        return '<Classification round_id: %d bow_type: %d>'.format(self.round_id, self.bow_type)
+        return '<Classification round_id: {} bow_type: {}>'.format(self.round_id, self.bow_type)
 
 
-class BowType(db.Model):
-    __tablename__ = 'bow_types'
-
+class BowTypes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
 
@@ -78,12 +98,10 @@ class BowType(db.Model):
         self.name = name
 
     def __repr__(self):
-        return '<BowType id: %d name %s>'.format(self.id, self.name)
+        return '<BowType id: {} name {}>'.format(self.id, self.name)
 
 
-class Event(db.Model):
-    __tablename__ = 'events'
-
+class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
 
@@ -92,12 +110,10 @@ class Event(db.Model):
         self.name = name
 
     def __repr__(self):
-        return '<Event id: %d name %s>'.format(self.id, self.name)
+        return '<Event id: {} name {}>'.format(self.id, self.name)
 
 
-class Round(db.Model):
-    __tablename__ = 'rounds'
-
+class Rounds(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     r_type = db.Column('type', db.Enum('Imperial', 'Metric', 'WA Outdoors', 'WA Indoors', 'Clout', 'Indoors',
@@ -115,12 +131,10 @@ class Round(db.Model):
         self.scoring_zones = scoring_zones
 
     def __repr__(self):
-        return '<Round name: %s id: %s type: %s>'.format(self.name, self.id, self.r_type)
+        return '<Round name: {} id: {} type: {}>'.format(self.name, self.id, self.r_type)
 
 
-class Archer(db.Model):
-    __tablename__ = 'archers'
-
+class Archers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
@@ -139,5 +153,5 @@ class Archer(db.Model):
         self.agb_card = agb_card
 
     def __repr__(self):
-        return "<Archer name: %s %s id: %d card_num: %d>".format(self.first_name, self.last_name, self.id,
+        return "<Archer name: {} {} id: {} card_num: {}>".format(self.first_name, self.last_name, self.id,
                                                                  self.card_number)

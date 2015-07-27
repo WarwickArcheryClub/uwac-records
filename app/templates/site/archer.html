@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ archer.get_name() + ' - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/responsive-tables.css') }}"/>
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="small-12 columns">
+            <h1>{{ archer.get_name() }}</h1>
+        </div>
+        {% for score in scores %}
+            <p>{{ score.__repr__() + ' ' + score.round.__repr__() + ' ' + score.classification.__repr__() }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
+{% endblock %}

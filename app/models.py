@@ -13,6 +13,7 @@ class Scores(db.Model):
     num_golds = db.Column(db.Integer, nullable=False)
     num_xs = db.Column(db.Integer, nullable=True)
     date = db.Column(db.Date, nullable=False)
+    round = db.relationship('Rounds', backref=db.backref('scores', uselist=False))
 
     def __init__(self, id, archer_id, round_id, event_id, bow_type, category, score, num_hits, num_golds, num_xs, date):
         self.id = id
@@ -86,7 +87,56 @@ class Classifications(db.Model):
         self.class_h = class_h
 
     def __repr__(self):
-        return '<Classification round_id: {} bow_type: {}>'.format(self.round_id, self.bow_type)
+        return '<Classification round_id: {} bow_type: {} / {} {} {} {} {} {} {} {}>'.format(self.round_id,
+                                                                                             self.bow_type,
+                                                                                             self.class_a, self.class_b,
+                                                                                             self.class_c, self.class_d,
+                                                                                             self.class_e, self.class_f,
+                                                                                             self.class_g, self.class_h)
+
+    def get_class(self, score, round_type):
+        if self.class_a is not None and score >= self.class_a:
+            if 'Indoors' in round_type:
+                return 'A'
+            else:
+                return 'GMB*'
+        elif self.class_b is not None and score >= self.class_b:
+            if 'Indoors' in round_type:
+                return 'B'
+            else:
+                return 'MB*'
+        elif self.class_c is not None and score >= self.class_c:
+            if 'Indoors' in round_type:
+                return 'C'
+            else:
+                return 'BM'
+        elif self.class_d is not None and score >= self.class_d:
+            if 'Indoors' in round_type:
+                return 'D'
+            else:
+                return '1st'
+        elif self.class_e is not None and score >= self.class_e:
+            if 'Indoors' in round_type:
+                return 'E'
+            else:
+                return '2nd'
+        elif self.class_f is not None and score >= self.class_f:
+            if 'Indoors' in round_type:
+                return 'F'
+            else:
+                return '3rd'
+        elif self.class_g is not None and score >= self.class_g:
+            if 'Indoors' in round_type:
+                return 'G'
+            else:
+                return None
+        elif self.class_h is not None and score >= self.class_h:
+            if 'Indoors' in round_type:
+                return 'H'
+            else:
+                return None
+        else:
+            return None
 
 
 class BowTypes(db.Model):

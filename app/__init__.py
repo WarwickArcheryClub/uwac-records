@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 from app.mod_site.controllers import mod_site as site_module
 from app.mod_api.controllers import mod_api as api_module
 
-app.register_blueprint(site_module)
+app.register_blueprint(site_module, url_prefix='/records')
 app.register_blueprint(api_module)
 
 # Init CSRF

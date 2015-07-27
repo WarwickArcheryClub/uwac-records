@@ -100,3 +100,5 @@ config.py
 
 # Static files that aren't necessary except for development
 static/
+
+*.pyc

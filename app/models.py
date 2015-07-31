@@ -14,6 +14,7 @@ class Scores(db.Model):
     num_xs = db.Column(db.Integer, nullable=True)
     date = db.Column(db.Date, nullable=False)
     round = db.relationship('Rounds', backref=db.backref('scores', uselist=False))
+    bow = db.relationship('BowTypes', backref=db.backref('scores', uselist=False))
 
     def __init__(self, id, archer_id, round_id, event_id, bow_type, category, score, num_hits, num_golds, num_xs, date):
         self.id = id

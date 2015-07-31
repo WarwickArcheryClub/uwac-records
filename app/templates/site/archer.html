@@ -13,8 +13,12 @@
         <div class="small-12 columns">
             <h1>{{ archer.get_name() }}</h1>
         </div>
-        {% for score in scores %}
-            <p>{{ score.__repr__() + ' ' + score.round.__repr__() + ' ' + score.classification.__repr__() }}</p>
+        {% for category in scores %}
+            <h3>{{ category }}</h3>
+            {% for score in scores[category] %}
+                <p>{{ score }}{{ score.round }}{{ score.classification }}</p>
+            {% endfor %}
+{#            <p>{{ score.__repr__() + ' ' + score.round.__repr__() + ' ' + score.classification.__repr__() }}</p>#}
         {% endfor %}
     </div>
 {% endblock %}

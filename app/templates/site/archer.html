@@ -9,17 +9,53 @@
 {% endblock %}
 
 {% block main_content %}
-    <div class="row">
+    <div id="top" class="row">
         <div class="small-12 columns">
-            <h1>{{ archer.get_name() }}</h1>
-        </div>
-        {% for category in scores %}
-            <h3>{{ category }}</h3>
-            {% for score in scores[category] %}
-                <p>{{ score }}{{ score.round }}{{ score.classification }}</p>
+            <section>
+                <h1>Scores for {{ archer.get_name() }}</h1>
+                <h4>Jump to:</h4>
+                <ul>
+                    {% for category in categories %}
+                        <li>
+                            <a href="#{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <p class="bottom-divider pad-bottom px-5"><strong>Note:</strong> Any classification with an asterix (<strong>*</strong>) needs to have been shot at a record-status event.</p>
+            </section>
+            {% for category in categories %}
+                <section>
+                    <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</h3>
+                    <table class="responsive full-width">
+                        <thead>
+                        <tr>
+                            <th>Score</th>
+                            <th>Hits</th>
+                            <th>Golds</th>
+                            <th>Xs</th>
+                            <th>Experience</th>
+                            <th>Classification</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for score in category['scores'] %}
+                            <tr>
+                                <td>{{ score['score'] }}<span class="fade">/{{ category['max_score'] }}</span></td>
+                                <td>{{ score['num_hits'] }}</td>
+                                <td>{{ score['num_golds'] }}</td>
+                                <td>{{ score['num_xs'] }}</td>
+                                <td>{{ score['category'] }}</td>
+                                <td>{{ score['classification'] if score['classification'] else '' }}</td>
+                                <td>{{ score['date'] }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <p class="text-right"><a href="#top"><i class="fa fa-chevron-up"></i> Back to the top</a></p>
+                </section>
             {% endfor %}
-{#            <p>{{ score.__repr__() + ' ' + score.round.__repr__() + ' ' + score.classification.__repr__() }}</p>#}
-        {% endfor %}
+        </div>
     </div>
 {% endblock %}
 

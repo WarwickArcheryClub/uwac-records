@@ -9,6 +9,11 @@ app.config.from_object('config')
 # Init database
 db = SQLAlchemy(app)
 
+# Register custom Jinja2 filters
+from app.mod_site.filters import strip_spaces
+
+app.jinja_env.filters['strip_spaces'] = strip_spaces
+
 # Register blueprints
 from app.mod_site.controllers import mod_site as site_module
 from app.mod_api.controllers import mod_api as api_module

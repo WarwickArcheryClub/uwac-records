@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ event.name + ' Dates - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block main_content %}
+    <div id="top" class="row">
+        <div class="small-12 columns">
+            <section class="bottom-divider">
+                <h1>Dates for {{ event.name }}</h1>
+            </section>
+            <section>
+                {% for category in categories %}
+                    <a href="/records/event/{{ event.id }}/{{ category['date'] | urlencode }}" class="item-row">{{ category['date'] }}<span>View scores</span></a>
+                {% endfor %}
+            </section>
+            <p class="text-right"><a href=""><i class="fa fa-chevron-up"></i> Back to top</a></p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

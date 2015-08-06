@@ -1,7 +1,7 @@
 import json
 
 from flask import Blueprint, render_template, request, Response, redirect
-from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classifications, Rounds
+from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classifications, Rounds, Events
 
 mod_site = Blueprint('site', __name__)
 
@@ -40,6 +40,24 @@ def search():
     else:
         return 'Hello, world'
         # TODO: Resolve query, if ambiguous take user to disambiguation page
+
+
+@mod_site.route('/event/<int:event_id>')
+def event_by_id(event_id):
+    if not db.session.query(db.exists().where(Events.id == event_id)).scalar():
+        # TODO: State round not found or something.
+        return redirect('/records/404')
+
+    event = Events.query.get(event_id)
+    categories_shot = db.session.query(Scores.date.distinct().label('date')).filter(
+        Scores.event_id == event_id).order_by(db.desc(Scores.date)).all()
+    categories = []
+    for cat in categories_shot:
+        category = {
+            'date': cat.date
+        }
+        categories.append(category)
+    return render_template('site/event.html', event=event, categories=categories)
 
 
 @mod_site.route('/round/<int:round_id>')

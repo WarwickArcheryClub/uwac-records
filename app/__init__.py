@@ -11,8 +11,10 @@ db = SQLAlchemy(app)
 
 # Register custom Jinja2 filters
 from app.mod_site.filters import strip_spaces
+from app.mod_site.filters import genderise
 
 app.jinja_env.filters['strip_spaces'] = strip_spaces
+app.jinja_env.filters['genderise'] = genderise
 
 # Register blueprints
 from app.mod_site.controllers import mod_site as site_module

@@ -15,6 +15,7 @@ class Scores(db.Model):
     date = db.Column(db.Date, nullable=False)
     round = db.relationship('Rounds', backref=db.backref('scores', uselist=False))
     bow = db.relationship('BowTypes', backref=db.backref('scores', uselist=False))
+    archer = db.relationship('Archers', backref=db.backref('scores', uselist=False))
 
     def __init__(self, id, archer_id, round_id, event_id, bow_type, category, score, num_hits, num_golds, num_xs, date):
         self.id = id
@@ -183,6 +184,12 @@ class Rounds(db.Model):
 
     def __repr__(self):
         return '<Round name: {} id: {} type: {}>'.format(self.name, self.id, self.r_type)
+
+    def is_outdoors(self):
+        if 'Indoors' in self.r_type or self.r_type is 'Clout':
+            return False
+        else:
+            return True
 
 
 class Archers(db.Model):

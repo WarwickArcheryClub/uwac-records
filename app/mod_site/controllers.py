@@ -20,7 +20,7 @@ def home():
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
 
-    return render_template('site/index.html', indoor_indiv_scores=indoor_indiv_scores,
+    return render_template('site/search.html', indoor_indiv_scores=indoor_indiv_scores,
                            outdoor_indiv_scores=outdoor_indiv_scores, bow_types=bow_types)
 
 
@@ -42,11 +42,43 @@ def search():
         # TODO: Resolve query, if ambiguous take user to disambiguation page
 
 
+@mod_site.route('/round/<int:round_id>')
+def round_by_id(round_id):
+    if not db.session.query(db.exists().where(Rounds.id == round_id)).scalar():
+        # TODO: State round not found or something.
+        return redirect('/records/404')
+
+    round = Rounds.query.get(round_id)
+    categories_shot = db.session.query(Scores.bow_type.distinct().label('bow_type'), Archers.gender.label('gender'),
+                                       (Archers.gender + ' ' + BowTypes.name).label('div_name')).filter(
+        Scores.round_id == round_id).join(Scores.archer).join(Scores.bow).order_by(Scores.bow_type).order_by(
+        Archers.gender).all()
+    categories = []
+    for cat in categories_shot:
+        category = {
+            'bow_type': cat.bow_type,
+            'div_name': cat.div_name,
+            'scores': Scores.query.filter(Scores.round_id == round_id).filter(Scores.bow_type == cat.bow_type).filter(
+                Archers.gender == cat.gender).join(Scores.archer).order_by(db.desc(Scores.score)).order_by(
+                db.desc(Scores.num_hits)).order_by(db.desc(Scores.num_golds)).order_by(db.desc(Scores.num_xs)).all(),
+            'max_score': round.max_score
+        }
+
+        for score in category['scores']:
+            print score.archer
+            classification = Classifications.query.get((score.round_id, score.bow_type, cat.gender))
+            score.classification = classification.get_class(score.score,
+                                                            score.round.r_type) if classification is not None else None
+
+        categories.append(category)
+    return render_template('site/round.html', round=round, categories=categories)
+
+
 @mod_site.route('/archer/<int:archer_id>')
-def archery_by_id(archer_id):
+def archer_by_id(archer_id):
     if not db.session.query(db.exists().where(Archers.id == archer_id)).scalar():
         # TODO: State archer not found or something.
-        return redirect('/404')
+        return redirect('/records/404')
 
     archer = Archers.query.get(archer_id)
     categories_shot = db.session.query(Scores.round_id.distinct().label('round_id'), Scores.bow_type.label('bow_type'),
@@ -70,5 +102,4 @@ def archery_by_id(archer_id):
                                                             score.round.r_type) if classification is not None else None
 
         categories.append(category)
-        print category
     return render_template('site/archer.html', archer=archer, categories=categories)

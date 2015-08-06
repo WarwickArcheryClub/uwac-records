@@ -12,7 +12,7 @@
     <div id="top" class="row">
         <div class="small-12 columns">
             <section>
-                <h1>{{ round.name | capitalize }} scores</h1>
+                <h1>{{ round.name }} scores</h1>
                 <h4>Jump to:</h4>
                 <ul>
                     {% for category in categories %}
@@ -28,17 +28,17 @@
             {% for category in categories %}
                 <section>
                     <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | genderise | title }}</h3>
-                    <table class="responsive full-width">
+                    <table class="responsive full-width sortable">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Score</th>
-                            <th>Hits</th>
-                            <th>Golds</th>
-                            <th>Xs</th>
-                            <th>Experience</th>
+                            <th class="sort-header reverse">Name</th>
+                            <th class="{sorter: 'scores'} sort-header sort-ascending">Score</th>
+                            <th class="sort-header">Hits</th>
+                            <th class="sort-header">Golds</th>
+                            <th class="sort-header">Xs</th>
+                            <th class="sort-header reverse">Experience</th>
                             <th>Classification</th>
-                            <th>Date</th>
+                            <th class="sort-header">Date</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -64,5 +64,10 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script>
+        var class_column = 6;
+    </script>
     <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sort-tables.js') }}"></script>
 {% endblock %}

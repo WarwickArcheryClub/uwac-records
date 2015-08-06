@@ -65,7 +65,6 @@ def round_by_id(round_id):
         }
 
         for score in category['scores']:
-            print score.archer
             classification = Classifications.query.get((score.round_id, score.bow_type, cat.gender))
             score.classification = classification.get_class(score.score,
                                                             score.round.r_type) if classification is not None else None

@@ -234,6 +234,7 @@
     <script type="text/javascript">
         var csrftoken = "{{ csrf_token() }}"
     </script>
+    <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
     <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
 {% endblock %}

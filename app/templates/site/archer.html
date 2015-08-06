@@ -26,16 +26,16 @@
             {% for category in categories %}
                 <section>
                     <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</h3>
-                    <table class="responsive full-width">
+                    <table class="responsive full-width sortable">
                         <thead>
                         <tr>
-                            <th>Score</th>
-                            <th>Hits</th>
-                            <th>Golds</th>
-                            <th>Xs</th>
-                            <th>Experience</th>
+                            <th class="{sorter: 'scores'} sort-header sort-ascending">Score</th>
+                            <th class="sort-header">Hits</th>
+                            <th class="sort-header">Golds</th>
+                            <th class="sort-header">Xs</th>
+                            <th class="sort-header reverse">Experience</th>
                             <th>Classification</th>
-                            <th>Date</th>
+                            <th class="sort-header">Date</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -46,7 +46,7 @@
                                 <td>{{ score['num_golds'] }}</td>
                                 <td>{{ score['num_xs'] }}</td>
                                 <td>{{ score['category'] }}</td>
-                                <td>{{ score['classification'] if score['classification'] else '' }}</td>
+                                <td>{{ score['classification'] if score['classification'] else 'None' }}</td>
                                 <td>{{ score['date'] }}</td>
                             </tr>
                         {% endfor %}
@@ -60,5 +60,10 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script>
+        var class_column = 5;
+    </script>
     <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sort-tables.js') }}"></script>
 {% endblock %}

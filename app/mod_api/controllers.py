@@ -20,13 +20,13 @@ def all_suggestions():
                            Events.query.filter(Events.name.ilike('%{}%'.format(query))).all()))
     suggestions.extend(map(SuggestionUtils.to_suggestion,
                            Archers.query.filter(
-                               (Archers.first_name + " " + Archers.last_name).ilike('%{}%'.format(query))).all()))
+                               (Archers.first_name + ' ' + Archers.last_name).ilike('%{}%'.format(query))).all()))
 
     response = Response(
         json.dumps({'suggestions':
                         sorted(suggestions, key=SuggestionUtils.get_key,
                                cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
-    response.headers["Content-Type"] = "application/json"
+    response.headers['Content-Type'] = 'application/json'
     return response
 
 
@@ -44,7 +44,7 @@ def archers_suggestions():
     response = Response(json.dumps({'suggestions':
                                         sorted(suggestions, key=SuggestionUtils.get_key,
                                                cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
-    response.headers["Content-Type"] = "application/json"
+    response.headers['Content-Type'] = 'application/json'
     return response
 
 
@@ -61,7 +61,7 @@ def rounds_suggestions():
     response = Response(json.dumps({'suggestions':
                                         sorted(suggestions, key=SuggestionUtils.get_key,
                                                cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
-    response.headers["Content-Type"] = "application/json"
+    response.headers['Content-Type'] = 'application/json'
     return response
 
 
@@ -78,7 +78,7 @@ def events_suggestions():
     response = Response(json.dumps({'suggestions':
                                         sorted(suggestions, key=SuggestionUtils.get_key,
                                                cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
-    response.headers["Content-Type"] = "application/json"
+    response.headers["Content-Type"] = 'application/json'
     return response
 
 
@@ -88,16 +88,16 @@ class SuggestionUtils:
 
     @staticmethod
     def get_key(item):
-        return item["value"]
+        return item['value']
 
     @staticmethod
     def to_suggestion(item):
         if type(item) is Rounds:
-            return {"data": {"id": item.id, "s_type": "round"}, "value": item.name}
+            return {'data': {'id': item.id, 's_type': 'round'}, 'value': item.name}
         elif type(item) is Events:
-            return {"data": {"id": item.id, "s_type": "event"}, "value": item.name}
+            return {'data': {'id': item.id, 's_type': 'event'}, 'value': item.name}
         elif type(item) is Archers:
-            return {"data": {"id": item.id, "s_type": "archer"}, "value": item.get_name()}
+            return {'data': {'id': item.id, 's_type': 'archer'}, 'value': item.get_name()}
         else:
             return None
 
@@ -105,11 +105,11 @@ class SuggestionUtils:
     @staticmethod
     def to_complex_suggestion(item):
         if type(item) is Rounds:
-            return {"value": item.name, "data": {"id": item.id, "type": item.r_type, "max_hits": item.max_hits,
-                                                 "max_score": item.max_score}}
+            return {'value': item.name, 'data': {'id': item.id, 'type': item.r_type, 'max_hits': item.max_hits,
+                                                 'max_score': item.max_score}}
         elif type(item) is Events:
-            return {"data": {"id": item.id, "s_type": "event"}, "value": item.name}
+            return {'data': {'id': item.id, 's_type': 'event'}, 'value': item.name}
         elif type(item) is Archers:
-            return {"data": {"id": item.id, "s_type": "archer"}, "value": item.get_name()}
+            return {'data': {'id': item.id, 's_type': 'archer'}, 'value': item.get_name()}
         else:
             return None

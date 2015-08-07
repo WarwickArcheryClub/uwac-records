@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#a70727">
 
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
@@ -15,7 +16,7 @@
 
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="flex-wrapper">
 <section class="contain-to-grid">
     <nav class="top-bar" data-topbar role="navigation">
         <ul class="title-area">
@@ -38,7 +39,7 @@
     </nav>
 </section>
 
-<section id="main-content">
+<section id="main-content" class="flex-content">
     {% block main_content %}{% endblock %}
 </section>
 

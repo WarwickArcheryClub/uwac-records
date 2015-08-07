@@ -53,11 +53,47 @@ def event_by_id(event_id):
         Scores.event_id == event_id).order_by(db.desc(Scores.date)).all()
     categories = []
     for cat in categories_shot:
+        print type(cat.date)
         category = {
             'date': cat.date
         }
         categories.append(category)
     return render_template('site/event.html', event=event, categories=categories)
+
+
+@mod_site.route('/event/<int:event_id>/<date:event_date>')
+def event_by_id_date(event_id, event_date):
+    if not db.session.query(db.exists().where(Events.id == event_id)).scalar():
+        # TODO: State round not found or something.
+        return redirect('/records/404')
+
+    event = Events.query.get(event_id)
+    categories_shot = db.session.query(Scores.round_id.distinct().label('round_id'), Scores.bow_type.label('bow_type'),
+                                       (Rounds.name + ' ' + BowTypes.name).label('div_name')).join(Scores.round).join(
+        Scores.bow).filter(Scores.event_id == event_id).filter(Scores.date == event_date).all()
+    categories = []
+    for cat in categories_shot:
+        category = {
+            'round_id': cat.round_id,
+            'bow_type': cat.bow_type,
+            'div_name': cat.div_name,
+            'scores': Scores.query.filter(Scores.round_id == cat.round_id).filter(
+                Scores.bow_type == cat.bow_type).filter(Scores.event_id == event_id).filter(Scores.date == event_date)
+                .order_by(db.desc(Scores.score)).order_by(db.desc(Scores.num_hits)).order_by(
+                db.desc(Scores.num_golds)).order_by(db.desc(Scores.num_xs)).all(),
+            'max_score': Rounds.query.get(cat.round_id).max_score
+        }
+
+        for score in category['scores']:
+            gender = Archers.query.get(score.archer_id).gender
+            classification = Classifications.query.get((score.round_id, score.bow_type, gender))
+            score.classification = classification.get_class(score.score,
+                                                            score.round.r_type) if classification is not None else None
+
+        categories.append(category)
+
+    return render_template('site/event-detail.html', event=event, date=event_date.strftime('%Y-%m-%d'),
+                           categories=categories)
 
 
 @mod_site.route('/round/<int:round_id>')

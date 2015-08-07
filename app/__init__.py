@@ -16,6 +16,12 @@ from app.mod_site.filters import genderise
 app.jinja_env.filters['strip_spaces'] = strip_spaces
 app.jinja_env.filters['genderise'] = genderise
 
+# Register custom URL converters
+
+from app.mod_site.converters import DateConverter
+
+app.url_map.converters['date'] = DateConverter
+
 # Register blueprints
 from app.mod_site.controllers import mod_site as site_module
 from app.mod_api.controllers import mod_api as api_module

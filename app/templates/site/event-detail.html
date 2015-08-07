@@ -1,33 +1,30 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ round.name + ' scores - University of Warwick Archery Club' }}
+    {{ event.name + ' on ' + date + ' - University of Warwick Archery Club' }}
 {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/responsive-tables.css') }}"/>
 {% endblock %}
 
 {% block main_content %}
     <div id="top" class="row">
         <div class="small-12 columns">
             <section>
-                <h1>{{ round.name }} scores</h1>
+                <h1>{{ event.name }} on {{ date }}</h1>
                 <h4>Jump to:</h4>
                 <ul>
                     {% for category in categories %}
                         <li>
-                            <a href="#{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | genderise }}</a>
+                            <a href="#{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</a>
                         </li>
                     {% endfor %}
                 </ul>
-                {% if round.is_outdoors() %}
-                    <p class="bottom-divider pad-bottom px-5"><strong>Note:</strong> Any classification with an asterix (<strong>*</strong>) needs to have been shot at a record-status event.</p>
-                {% endif %}
+                <p class="bottom-divider pad-bottom px-5"><strong>Note:</strong> Any classification with an asterix (<strong>*</strong>) needs to have been shot at a record-status event.</p>
             </section>
             {% for category in categories %}
                 <section>
-                    <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | genderise | title }}</h3>
+                    <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</h3>
                     <table class="responsive full-width sortable">
                         <thead>
                         <tr>

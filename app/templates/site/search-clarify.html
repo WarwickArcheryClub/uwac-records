@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'Results for ' + query + ' - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block main_content %}
+    <div id="top" class="row">
+        <section>
+            <h1>Results for {{ query }}</h1>
+            <h4>Jump to:</h4>
+            <ul>
+                {% if archers %}
+                    <li><a href="#archers">Archers</a></li>
+                {% endif %}
+                {% if rounds %}
+                    <li><a href="#rounds">Rounds</a></li>
+                {% endif %}
+                {% if events %}
+                    <li><a href="#events">Events</a></li>
+                {% endif %}
+            </ul>
+        </section>
+        {% if archers %}
+            <section>
+                <h3 id="archers">Archers</h3>
+                {% for archer in archers %}
+                    <a href="/records/archer/{{ archer.id }}" class="item-row">{{ archer.get_name() }}<span>View archer</span></a>
+                {% endfor %}
+                <p class="text-right"><a href="#top"><i class="fa fa-chevron-up"></i> Back to top</a></p>
+            </section>
+        {% endif %}
+        {% if rounds %}
+            <section>
+                <h3 id="rounds">Rounds</h3>
+                {% for round in rounds %}
+                    <a href="/records/round/{{ round.id }}" class="item-row">{{ round.name }}<span>View round</span></a>
+                {% endfor %}
+                <p class="text-right"><a href="#top"><i class="fa fa-chevron-up"></i> Back to top</a></p>
+            </section>
+        {% endif %}
+        {% if events %}
+            <section>
+                <h3 id="events">Events</h3>
+                {% for event in events %}
+                    <a href="/records/event/{{ event.id }}" class="item-row">{{ event.name }}<span>View event</span></a>
+                {% endfor %}
+                <p class="text-right"><a href="#top"><i class="fa fa-chevron-up"></i> Back to top</a></p>
+            </section>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

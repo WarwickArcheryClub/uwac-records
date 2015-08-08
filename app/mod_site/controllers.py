@@ -1,5 +1,6 @@
 import json
 
+import Levenshtein as lev
 from flask import Blueprint, render_template, request, Response, redirect
 from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classifications, Rounds, Events
 
@@ -38,8 +39,19 @@ def search():
             else:
                 return redirect('/records/{}/{}'.format(s_type, s_id))
     else:
-        return 'Hello, world'
-        # TODO: Resolve query, if ambiguous take user to disambiguation page
+        query = request.form['search']
+        archers = sorted(
+            Archers.query.filter((Archers.first_name + ' ' + Archers.last_name).ilike('%{}%'.format(query))).all(),
+            key=get_key,
+            cmp=lambda x, y: lev.distance(x.lower(), query.lower()) - lev.distance(y.lower(), query.lower()))
+        rounds = sorted(Rounds.query.filter(Rounds.name.ilike('%{}%'.format(query))).all(), key=get_key,
+                        cmp=lambda x, y: lev.distance(x.lower(), query.lower()) - lev.distance(y.lower(),
+                                                                                               query.lower()))
+        events = sorted(Events.query.filter(Events.name.ilike('%{}%'.format(query))).all(), key=get_key,
+                        cmp=lambda x, y: lev.distance(x.lower(), query.lower()) - lev.distance(y.lower(),
+                                                                                               query.lower()))
+
+        return render_template('site/search-clarify.html', query=query, archers=archers, rounds=rounds, events=events)
 
 
 @mod_site.route('/event/<int:event_id>')
@@ -156,3 +168,10 @@ def archer_by_id(archer_id):
 
         categories.append(category)
     return render_template('site/archer.html', archer=archer, categories=categories)
+
+
+def get_key(item):
+    if isinstance(item, Archers):
+        return item.first_name + ' ' + item.last_name
+    else:
+        return item.name

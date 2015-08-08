@@ -40,6 +40,10 @@ def search():
                 return redirect('/records/{}/{}'.format(s_type, s_id))
     else:
         query = request.form['search']
+
+        if not query:
+            return redirect('/records/400')
+
         archers = sorted(
             Archers.query.filter((Archers.first_name + ' ' + Archers.last_name).ilike('%{}%'.format(query))).all(),
             key=get_key,

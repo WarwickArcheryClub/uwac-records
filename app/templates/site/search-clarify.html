@@ -9,6 +9,9 @@
 
 {% block main_content %}
     <div id="top" class="row">
+    {% include "site/search-form.html" %}
+    </div>
+    <div class="row">
         <section>
             <h1>Results for {{ query }}</h1>
             <h4>Jump to:</h4>

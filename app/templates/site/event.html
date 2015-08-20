@@ -9,6 +9,9 @@
 
 {% block main_content %}
     <div id="top" class="row">
+    {% include "site/search-form.html" %}
+    </div>
+    <div class="row">
         <div class="small-12 columns">
             <section class="bottom-divider">
                 <h1>Dates for {{ event.name }}</h1>
@@ -24,4 +27,9 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}"
+    </script>
+    <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search-autocomplete.js') }}"></script>
 {% endblock %}

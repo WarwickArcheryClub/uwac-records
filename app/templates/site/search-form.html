@@ -1,0 +1,22 @@
+<div class="small-12 columns content-active" id="browse">
+    <h4>Start typing a name, event or round in the input below and select the item you want.</h4>
+
+    <form method="post" action="/records/search">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" id="search-data" name="search_data" value=""/>
+
+        <div class="row">
+            <div class="small-12 columns">
+                <div class="row collapse postfix-radius">
+                    <div class="small-10 medium-11 columns">
+                        <input type="text" id="search-input" name="search" class="autocomplete-input"
+                               placeholder="A name, round or event" autofocus>
+                    </div>
+                    <div class="small-2 medium-1 columns">
+                        <button type="submit" id="submit-button" class="no-padding button postfix">Go</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -13,57 +13,45 @@
 
             <h1 id="submit-tab" class="small-6 columns form-tab text-right"><a href="#submit">Submit</a></h1>
         </div>
-        <div class="small-12 columns content-active" id="browse">
-            <h4>Start typing a name, event or round in the input below and select the item you want.</h4>
-
-            <form method="post" action="/records/search">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <input type="hidden" id="search-data" name="search_data" value="" />
-                <div class="row">
-                    <div class="small-12 columns">
-                        <div class="row collapse postfix-radius">
-                            <div class="small-10 medium-11 columns">
-                                <input type="text" id="search-input" name="search" class="autocomplete-input"
-                                       placeholder="A name, round or event" autofocus>
-                            </div>
-                            <div class="small-2 medium-1 columns">
-                                <button type="submit" id="submit-button" class="no-padding button postfix">Go</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+        {% include "site/search-form.html" %}
         <div class="small-12 columns" id="submit">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <form>
                 <div class="row">
                     <div class="small-12 columns">
-                        <h5>Archer info</h5>
-                    </div>
-                    <div class="medium-12 columns">
-                        <div class="row collapse prefix-radius">
-                            <div class="small-3 medium-1 columns">
-                                <span class="prefix">Archer</span>
-                            </div>
-                            <div class="small-9 medium-11 columns">
-                                <input type="text" id="archer-input" class="autocomplete-input step"
-                                       placeholder="Archer's name">
-                            </div>
-                        </div>
+                        <h5>Score details</h5>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="small-12 columns">
-                        <h5 class="score-title">Score details</h5>
+                    <div class="medium-6 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-2 columns">
+                                <span class="prefix">Archer</span>
+                            </div>
+                            <div class="small-10 columns">
+                                <select id="archer-select" data-placeholer="Select an archer" data-width="100%"></select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="medium-8 columns">
+                    <div class="medium-6 columns">
                         <div class="row collapse prefix-radius">
                             <div class="small-2 columns">
                                 <span class="prefix">Round</span>
                             </div>
                             <div class="small-10 columns">
-                                <input type="text" id="round-input" class="autocomplete-input"
-                                       placeholder="Round name e.g.: Bray I">
+                                <select id="round-select" data-placeholder="Select a round" data-width="100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="medium-4 columns">
+                        <div class="row collapse prefix-radius">
+                            <div class="small-2 medium-3 columns">
+                                <span class="prefix">Event</span>
+                            </div>
+                            <div class="small-10 medium-9 columns">
+                                <select id="event-select" data-placeholder="Select an event" data-width="100%"></select>
                             </div>
                         </div>
                     </div>
@@ -81,20 +69,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="small-12 medium-4 columns">
-                        <div class="row collapse prefix-radius">
-                            <div class="small-2 medium-3 columns">
-                                <span class="prefix">Event</span>
-                            </div>
-                            <div class="small-10 medium-9 columns">
-                                <input type="text" id="event-input" class="autocomplete-input"
-                                       placeholder="Event name e.g.: BUCS, BUTTS">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="small-12 medium-4 columns end">
+                    <div class="medium-4 columns end">
                         <div class="row collapse prefix-radius">
                             <div class="small-2 medium-3 columns">
                                 <span class="prefix">Date</span>
@@ -235,6 +210,8 @@
         var csrftoken = "{{ csrf_token() }}"
     </script>
     <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search-autocomplete.js') }}"></script>
     <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
     <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
 {% endblock %}

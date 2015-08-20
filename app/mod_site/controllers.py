@@ -69,7 +69,6 @@ def event_by_id(event_id):
         Scores.event_id == event_id).order_by(db.desc(Scores.date)).all()
     categories = []
     for cat in categories_shot:
-        print type(cat.date)
         category = {
             'date': cat.date
         }

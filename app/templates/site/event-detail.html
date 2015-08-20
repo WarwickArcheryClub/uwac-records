@@ -27,7 +27,9 @@
             </section>
             {% for category in categories %}
                 <section>
-                    <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</h3>
+                    <a href="/records/round/{{ category["round_id"] }}">
+                        <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</h3>
+                    </a>
                     <table class="responsive full-width sortable">
                         <thead>
                         <tr>
@@ -44,7 +46,7 @@
                         <tbody>
                         {% for score in category['scores'] %}
                             <tr>
-                                <td>{{ score.archer.get_name() }}</td>
+                                <td><a href="/records/archer/{{ score.archer_id }}">{{ score.archer.get_name() }}</a></td>
                                 <td>{{ score['score'] }}<span class="fade">/{{ category['max_score'] }}</span></td>
                                 <td>{{ score['num_hits'] }}</td>
                                 <td>{{ score['num_golds'] }}</td>

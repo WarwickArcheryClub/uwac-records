@@ -45,13 +45,13 @@ def search():
             return redirect('/records/400')
 
         archers = sorted(
-            Archers.query.filter((Archers.first_name + ' ' + Archers.last_name).ilike('%{}%'.format(query))).all(),
+            Archers.query.filter((Archers.first_name + ' ' + Archers.last_name).ilike(u'%{}%'.format(query))).all(),
             key=get_key,
             cmp=lambda x, y: lev.distance(x.lower(), query.lower()) - lev.distance(y.lower(), query.lower()))
-        rounds = sorted(Rounds.query.filter(Rounds.name.ilike('%{}%'.format(query))).all(), key=get_key,
+        rounds = sorted(Rounds.query.filter(Rounds.name.ilike(u'%{}%'.format(query))).all(), key=get_key,
                         cmp=lambda x, y: lev.distance(x.lower(), query.lower()) - lev.distance(y.lower(),
                                                                                                query.lower()))
-        events = sorted(Events.query.filter(Events.name.ilike('%{}%'.format(query))).all(), key=get_key,
+        events = sorted(Events.query.filter(Events.name.ilike(u'%{}%'.format(query))).all(), key=get_key,
                         cmp=lambda x, y: lev.distance(x.lower(), query.lower()) - lev.distance(y.lower(),
                                                                                                query.lower()))
 

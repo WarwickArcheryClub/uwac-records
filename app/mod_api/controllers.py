@@ -15,12 +15,12 @@ def all_suggestions():
     query = request.form['query']
 
     suggestions = map(SuggestionUtils.to_suggestion,
-                      Rounds.query.filter(Rounds.name.ilike('%{}%'.format(query))).all())
+                      Rounds.query.filter(Rounds.name.ilike(u'%{}%'.format(query))).all())
     suggestions.extend(map(SuggestionUtils.to_suggestion,
-                           Events.query.filter(Events.name.ilike('%{}%'.format(query))).all()))
+                           Events.query.filter(Events.name.ilike(u'%{}%'.format(query))).all()))
     suggestions.extend(map(SuggestionUtils.to_suggestion,
                            Archers.query.filter(
-                               (Archers.first_name + ' ' + Archers.last_name).ilike('%{}%'.format(query))).all()))
+                               (Archers.first_name + ' ' + Archers.last_name).ilike(u'%{}%'.format(query))).all()))
 
     response = Response(
         json.dumps({'suggestions':
@@ -39,7 +39,7 @@ def archers_suggestions():
 
     suggestions = map(SuggestionUtils.to_complex_suggestion,
                       Archers.query.filter(
-                          (Archers.first_name + " " + Archers.last_name).ilike('%{}%'.format(query))).all())
+                          (Archers.first_name + " " + Archers.last_name).ilike(u'%{}%'.format(query))).all())
 
     response = Response(json.dumps({'suggestions':
                                         sorted(suggestions, key=SuggestionUtils.get_key,
@@ -56,7 +56,7 @@ def rounds_suggestions():
     query = request.form['query']
 
     suggestions = map(SuggestionUtils.to_complex_suggestion,
-                      Rounds.query.filter(Rounds.name.ilike('%{}%'.format(query))).all())
+                      Rounds.query.filter(Rounds.name.ilike(u'%{}%'.format(query))).all())
 
     response = Response(json.dumps({'suggestions':
                                         sorted(suggestions, key=SuggestionUtils.get_key,
@@ -73,7 +73,7 @@ def events_suggestions():
     query = request.form['query']
 
     suggestions = map(SuggestionUtils.to_complex_suggestion,
-                      Events.query.filter(Events.name.ilike('%{}%'.format(query))).all())
+                      Events.query.filter(Events.name.ilike(u'%{}%'.format(query))).all())
 
     response = Response(json.dumps({'suggestions':
                                         sorted(suggestions, key=SuggestionUtils.get_key,

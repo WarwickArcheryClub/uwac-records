@@ -39,13 +39,13 @@ class Scores(db.Model):
 class IndividualRecords(db.Model):
     __tablename__ = 'individual_records'
 
-    archer_name = db.Column(db.String(255), primary_key=True)
+    archer_name = db.Column(db.Unicode(255), primary_key=True)
     score = db.Column(db.Integer, primary_key=True)
-    round_name = db.Column(db.String(255), primary_key=True)
+    round_name = db.Column(db.Unicode(255), primary_key=True)
     num_golds = db.Column(db.Integer, primary_key=True)
     round_type = db.Column(db.Enum('Imperial', 'Metric', 'WA Outdoors', 'WA Indoors', 'Clout', 'Indoors',
                                    name='ROUND_TYPE'), primary_key=True)
-    bow_type = db.Column(db.String(255), primary_key=True)
+    bow_type = db.Column(db.Unicode(255), primary_key=True)
     gender = db.Column(db.Enum('F', 'M', name='GENDER'), primary_key=True)
     category = db.Column(db.Enum('Novice', 'Experienced', name='CATEGORY'), primary_key=True)
     date = db.Column(db.Date, primary_key=False)
@@ -144,7 +144,7 @@ class Classifications(db.Model):
 
 class BowTypes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.Unicode(255), nullable=False)
 
     def __init__(self, id, name):
         self.id = id
@@ -156,7 +156,7 @@ class BowTypes(db.Model):
 
 class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.Unicode(255), nullable=False)
 
     def __init__(self, id, name):
         self.id = id
@@ -168,7 +168,7 @@ class Events(db.Model):
 
 class Rounds(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.Unicode(255), nullable=False)
     r_type = db.Column('type', db.Enum('Imperial', 'Metric', 'WA Outdoors', 'WA Indoors', 'Clout', 'Indoors',
                                        name='ROUND_TYPE'), nullable=False)
     max_hits = db.Column(db.Integer, nullable=False)
@@ -195,12 +195,12 @@ class Rounds(db.Model):
 
 class Archers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(255), nullable=False)
-    last_name = db.Column(db.String(255), nullable=False)
+    first_name = db.Column(db.Unicode(255), nullable=False)
+    last_name = db.Column(db.Unicode(255), nullable=False)
     gender = db.Column(db.Enum('F', 'M', name='GENDER'), nullable=False)
-    email = db.Column(db.String(255), nullable=True)
-    card_number = db.Column(db.String(7), nullable=True)
-    agb_card = db.Column(db.String(10), nullable=True)
+    email = db.Column(db.Unicode(255), nullable=True)
+    card_number = db.Column(db.Unicode(7), nullable=True)
+    agb_card = db.Column(db.Unicode(10), nullable=True)
 
     def __init__(self, id, first_name, last_name, gender, email, card_number, agb_card):
         self.id = id

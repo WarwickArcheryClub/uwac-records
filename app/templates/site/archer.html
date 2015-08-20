@@ -28,7 +28,9 @@
             </section>
             {% for category in categories %}
                 <section>
-                    <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</h3>
+                    <a href="/records/round/{{ category["round_id"] }}">
+                        <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</h3>
+                    </a>
                     <table class="responsive full-width sortable">
                         <thead>
                         <tr>

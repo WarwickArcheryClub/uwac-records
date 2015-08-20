@@ -4,7 +4,7 @@ def strip_spaces(str):
 
 
 # Filter that replaces all 'M' with 'Gents' and 'F' with 'Ladies'
-def genderise(str):
+def expand_gender(str):
     if str[0] == 'M':
         return 'Gents' + str[1:]
     else:

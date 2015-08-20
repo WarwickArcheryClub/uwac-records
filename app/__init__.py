@@ -11,10 +11,10 @@ db = SQLAlchemy(app)
 
 # Register custom Jinja2 filters
 from app.mod_site.filters import strip_spaces
-from app.mod_site.filters import genderise
+from app.mod_site.filters import expand_gender
 
 app.jinja_env.filters['strip_spaces'] = strip_spaces
-app.jinja_env.filters['genderise'] = genderise
+app.jinja_env.filters['genderise'] = expand_gender
 
 # Register custom URL converters
 

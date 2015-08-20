@@ -58,4 +58,9 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}"
+    </script>
+    <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search-autocomplete.js') }}"></script>
 {% endblock %}

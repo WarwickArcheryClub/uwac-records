@@ -97,8 +97,7 @@ target/
 
 # Sensitive config file
 config.py
+/app/static/bower_components/
 
-# Static files that aren't necessary except for development
-static/
-
+*.map
 *.pyc

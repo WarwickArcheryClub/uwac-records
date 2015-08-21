@@ -8,9 +8,7 @@
 {% endblock %}
 
 {% block main_content %}
-    <div id="top" class="row">
     {% include "site/search-form.html" %}
-    </div>
     <div class="row">
         <div class="small-12 columns">
             <section class="bottom-divider">
@@ -31,5 +29,6 @@
         var csrftoken = "{{ csrf_token() }}"
     </script>
     <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/search-autocomplete.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
 {% endblock %}

@@ -9,9 +9,7 @@
 {% endblock %}
 
 {% block main_content %}
-    <div id="top" class="row">
     {% include "site/search-form.html" %}
-    </div>
     <div class="row">
         <div class="small-12 columns">
             <section>
@@ -73,7 +71,8 @@
     </script>
     <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/search-autocomplete.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/sort-tables.js') }}"></script>
 {% endblock %}

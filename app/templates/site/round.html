@@ -18,7 +18,7 @@
                 <ul>
                     {% for category in categories %}
                         <li>
-                            <a href="#{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | genderise }}</a>
+                            <a href="#{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | expand_gender }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -28,7 +28,7 @@
             </section>
             {% for category in categories %}
                 <section>
-                    <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | genderise | title }}</h3>
+                    <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | expand_gender | title }}</h3>
                     <table class="responsive full-width sortable">
                         <thead>
                         <tr>

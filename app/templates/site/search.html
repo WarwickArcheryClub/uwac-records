@@ -10,73 +10,73 @@
     {% include "site/search-form.html" %}
     <div class="row">
         <div class="small-12 columns">
-            <h1>Club records</h1>
+            <h1>Individual club records</h1>
             <ul class="tabs" data-tab>
                 <li class="tab-title active"><a href="#indoors">Indoors</a></li>
                 <li class="tab-title"><a href="#outdoors">Outdoors</a></li>
             </ul>
             <div class="tabs-content">
                 <div class="content active" id="indoors">
-                    <h3 class="bottom-divider">Individual</h3>
-
-                    <div class="row">
-                        <div class="small-12 columns">
-                            <table class="responsive full-width">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Round</th>
-                                    <th>Score/Golds</th>
-                                    <th>Category</th>
-                                    <th>Date</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for score in indoor_indiv_scores %}
+                    {% for category in indoor_categories %}
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <h3 class="bottom-divider">{{ category['name'] }}</h3>
+                                <table class="responsive full-width">
+                                    <thead>
                                     <tr>
+                                        <th>Name</th>
+                                        <th>Round</th>
+                                        <th>Score/Golds</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for score in category['scores'] %}
+                                        <tr>
                                         <td>{{ score.archer_name }}</td>
                                         <td>{{ score.round_name }}</td>
                                         <td>{{ "{}/{}".format(score.score, (score.num_golds if score.num_golds else 0)) }}</td>
-                                        <td>{{ "{} {} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies"), score.bow_type) }}</td>
+                                        <td>{{ "{} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies")) }}</td>
                                         <td>{{ score.date }}</td>
                                     </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <h3 class="bottom-divider">Team</h3>
+                    {% endfor %}
                 </div>
                 <div class="content" id="outdoors">
-                    <h3 class="bottom-divider">Individual</h3>
-
-                    <div class="row">
-                        <div class="small-12 columns">
-                            <table class="responsive full-width">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Round</th>
-                                    <th>Score/Golds</th>
-                                    <th>Category</th>
-                                    <th>Date</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for score in outdoor_indiv_scores %}
+                    {% for category in outdoor_categories %}
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <h3 class="bottom-divider">{{ category['name'] }}</h3>
+                                <table class="responsive full-width">
+                                    <thead>
                                     <tr>
+                                        <th>Name</th>
+                                        <th>Round</th>
+                                        <th>Score/Golds</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for score in category['scores'] %}
+                                        <tr>
                                         <td>{{ score.archer_name }}</td>
                                         <td>{{ score.round_name }}</td>
                                         <td>{{ "{}/{}".format(score.score, (score.num_golds if score.num_golds else 0)) }}</td>
-                                        <td>{{ "{} {} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies"), score.bow_type) }}</td>
+                                        <td>{{ "{} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies")) }}</td>
                                         <td>{{ score.date }}</td>
                                     </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <h3 class="bottom-divider">Team</h3>
+                    {% endfor %}
                 </div>
             </div>
         </div>

@@ -9,20 +9,48 @@ mod_site = Blueprint('site', __name__)
 
 @mod_site.route('/', methods=['GET'])
 def home():
-    indoor_indiv_scores = IndividualRecords.query.filter(
+    indoor_categories_shot = db.session.query(IndividualRecords.bow_type.distinct().label('bow_type')).filter(
         db.or_(IndividualRecords.round_type == 'Indoors', IndividualRecords.round_type == 'WA Indoors')).order_by(
-        IndividualRecords.round_name, db.desc(IndividualRecords.category), db.desc(IndividualRecords.bow_type),
-        IndividualRecords.gender, db.desc(IndividualRecords.score)).all()
+        db.desc(IndividualRecords.bow_type)).all()
+    indoor_categories = []
 
-    outdoor_indiv_scores = IndividualRecords.query.filter(db.not_(
-        db.or_(IndividualRecords.round_type == 'Indoors', IndividualRecords.round_type == 'WA Indoors'))).order_by(
-        IndividualRecords.round_name, db.desc(IndividualRecords.category), db.desc(IndividualRecords.bow_type),
-        IndividualRecords.gender, db.desc(IndividualRecords.score)).all()
+    for cat in indoor_categories_shot:
+        category = {
+            'name': cat.bow_type,
+            'scores': IndividualRecords.query.filter(db.or_(IndividualRecords.round_type == 'Indoors',
+                                                            IndividualRecords.round_type == 'WA Indoors')).filter(
+                IndividualRecords.bow_type == cat.bow_type).order_by(IndividualRecords.round_name,
+                                                                     db.desc(IndividualRecords.category),
+                                                                     db.desc(IndividualRecords.score),
+                                                                     db.desc(IndividualRecords.num_golds)).all()
+        }
+
+        indoor_categories.append(category)
+
+    outdoor_categories_shot = db.session.query(
+        IndividualRecords.bow_type.distinct().label('bow_type')).filter(
+        db.not_(
+            db.or_(IndividualRecords.round_type == 'Indoors', IndividualRecords.round_type == 'WA Indoors'))).order_by(
+        db.desc(IndividualRecords.bow_type)).all()
+    outdoor_categories = []
+
+    for cat in outdoor_categories_shot:
+        category = {
+            'name': cat.bow_type,
+            'scores': IndividualRecords.query.filter(db.not_(db.or_(IndividualRecords.round_type == 'Indoors',
+                                                                    IndividualRecords.round_type == 'WA Indoors'))).filter(
+                IndividualRecords.bow_type == cat.bow_type).order_by(IndividualRecords.round_name,
+                                                                     db.desc(IndividualRecords.category),
+                                                                     db.desc(IndividualRecords.score),
+                                                                     db.desc(IndividualRecords.num_golds)).all()
+        }
+
+        outdoor_categories.append(category)
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
 
-    return render_template('site/search.html', indoor_indiv_scores=indoor_indiv_scores,
-                           outdoor_indiv_scores=outdoor_indiv_scores, bow_types=bow_types)
+    return render_template('site/search.html', bow_types=bow_types, indoor_categories=indoor_categories,
+                           outdoor_categories=outdoor_categories)
 
 
 @mod_site.route('/search', methods=['POST'])
@@ -55,7 +83,10 @@ def search():
                         cmp=lambda x, y: lev.distance(x.lower(), query.lower()) - lev.distance(y.lower(),
                                                                                                query.lower()))
 
-        return render_template('site/search-clarify.html', query=query, archers=archers, rounds=rounds, events=events)
+        bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+
+        return render_template('site/search-clarify.html', query=query, archers=archers, rounds=rounds, events=events,
+                               bow_types=bow_types)
 
 
 @mod_site.route('/event/<int:event_id>')
@@ -73,7 +104,10 @@ def event_by_id(event_id):
             'date': cat.date
         }
         categories.append(category)
-    return render_template('site/event.html', event=event, categories=categories)
+
+    bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+
+    return render_template('site/event.html', event=event, categories=categories, bow_types=bow_types)
 
 
 @mod_site.route('/event/<int:event_id>/<date:event_date>')
@@ -107,8 +141,10 @@ def event_by_id_date(event_id, event_date):
 
         categories.append(category)
 
+    bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+
     return render_template('site/event-detail.html', event=event, date=event_date.strftime('%Y-%m-%d'),
-                           categories=categories)
+                           categories=categories, bow_types=bow_types)
 
 
 @mod_site.route('/round/<int:round_id>')
@@ -139,7 +175,10 @@ def round_by_id(round_id):
                                                             score.round.r_type) if classification is not None else None
 
         categories.append(category)
-    return render_template('site/round.html', round=round, categories=categories)
+
+    bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+
+    return render_template('site/round.html', round=round, categories=categories, bow_types=bow_types)
 
 
 @mod_site.route('/archer/<int:archer_id>')
@@ -170,7 +209,10 @@ def archer_by_id(archer_id):
                                                             score.round.r_type) if classification is not None else None
 
         categories.append(category)
-    return render_template('site/archer.html', archer=archer, categories=categories)
+
+    bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+
+    return render_template('site/archer.html', archer=archer, categories=categories, bow_types=bow_types)
 
 
 def get_key(item):

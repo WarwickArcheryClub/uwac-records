@@ -14,7 +14,7 @@ from app.mod_site.filters import strip_spaces
 from app.mod_site.filters import expand_gender
 
 app.jinja_env.filters['strip_spaces'] = strip_spaces
-app.jinja_env.filters['genderise'] = expand_gender
+app.jinja_env.filters['expand_gender'] = expand_gender
 
 # Register custom URL converters
 

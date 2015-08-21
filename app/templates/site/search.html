@@ -29,7 +29,7 @@
                                 <span class="prefix">Archer</span>
                             </div>
                             <div class="small-10 columns">
-                                <select id="archer-select" data-placeholer="Select an archer" data-width="100%"></select>
+                                <select id="archer-select" class="select2" data-placeholder="Select an archer" data-width="100%" data-ajax--url="/api/suggestions/archers"></select>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                                 <span class="prefix">Round</span>
                             </div>
                             <div class="small-10 columns">
-                                <select id="round-select" data-placeholder="Select a round" data-width="100%"></select>
+                                <select id="round-select" class="select2" data-placeholder="Select a round" data-width="100%" data-ajax--url="/api/suggestions/rounds"></select>
                             </div>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                                 <span class="prefix">Event</span>
                             </div>
                             <div class="small-10 medium-9 columns">
-                                <select id="event-select" data-placeholder="Select an event" data-width="100%"></select>
+                                <select id="event-select" class="select2" data-placeholder="Select an event" data-width="100%" data-ajax--url="/api/suggestions/events"></select>
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                                 <span class="prefix">Date</span>
                             </div>
                             <div class="small-10 medium-9 columns">
-                                <input type="date" placeholder="">
+                                <input type="date" id="date-input">
                             </div>
                         </div>
                     </div>

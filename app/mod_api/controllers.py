@@ -37,13 +37,12 @@ def archers_suggestions():
 
     query = request.form['query']
 
-    suggestions = map(SuggestionUtils.to_complex_suggestion,
-                      Archers.query.filter(
-                          (Archers.first_name + " " + Archers.last_name).ilike(u'%{}%'.format(query))).all())
+    suggestions = map(SuggestionUtils.to_select2, Archers.query.filter(
+        (Archers.first_name + " " + Archers.last_name).ilike(u'%{}%'.format(query))).all())
 
-    response = Response(json.dumps({'suggestions':
-                                        sorted(suggestions, key=SuggestionUtils.get_key,
-                                               cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
+    response = Response(json.dumps({'results': sorted(suggestions, key=SuggestionUtils.get_select2_key,
+                                                      cmp=lambda x, y: lev.distance(x, query) - lev.distance(y,
+                                                                                                             query))}))
     response.headers['Content-Type'] = 'application/json'
     return response
 
@@ -55,11 +54,10 @@ def rounds_suggestions():
 
     query = request.form['query']
 
-    suggestions = map(SuggestionUtils.to_complex_suggestion,
-                      Rounds.query.filter(Rounds.name.ilike(u'%{}%'.format(query))).all())
+    suggestions = map(SuggestionUtils.to_select2, Rounds.query.filter(Rounds.name.ilike(u'%{}%'.format(query))).all())
 
-    response = Response(json.dumps({'suggestions':
-                                        sorted(suggestions, key=SuggestionUtils.get_key,
+    response = Response(json.dumps({'results':
+                                        sorted(suggestions, key=SuggestionUtils.get_select2_key,
                                                cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
     response.headers['Content-Type'] = 'application/json'
     return response
@@ -72,11 +70,10 @@ def events_suggestions():
 
     query = request.form['query']
 
-    suggestions = map(SuggestionUtils.to_complex_suggestion,
-                      Events.query.filter(Events.name.ilike(u'%{}%'.format(query))).all())
+    suggestions = map(SuggestionUtils.to_select2, Events.query.filter(Events.name.ilike(u'%{}%'.format(query))).all())
 
-    response = Response(json.dumps({'suggestions':
-                                        sorted(suggestions, key=SuggestionUtils.get_key,
+    response = Response(json.dumps({'results':
+                                        sorted(suggestions, key=SuggestionUtils.get_select2_key,
                                                cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
     response.headers["Content-Type"] = 'application/json'
     return response
@@ -91,6 +88,10 @@ class SuggestionUtils:
         return item['value']
 
     @staticmethod
+    def get_select2_key(item):
+        return item['text']
+
+    @staticmethod
     def to_suggestion(item):
         if type(item) is Rounds:
             return {'data': {'id': item.id, 's_type': 'round'}, 'value': item.name}
@@ -101,7 +102,14 @@ class SuggestionUtils:
         else:
             return None
 
-    # TODO: Add other items for event and archers
+    @staticmethod
+    def to_select2(item):
+        if type(item) is Rounds:
+            return {'id': item.id, 'text': item.name, 'max_hits': item.max_hits, 'max_score': item.max_score,
+                    'type': item.r_type}
+        else:
+            return {'id': item.id, 'text': item.get_name() if type(item) is Archers else item.name}
+
     @staticmethod
     def to_complex_suggestion(item):
         if type(item) is Rounds:

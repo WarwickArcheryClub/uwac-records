@@ -26,7 +26,7 @@ $(document).ready(function () {
             type: "POST",
             dataType: "json"
         },
-        minimumInputLength: 3
+        minimumInputLength: 2
     });
     $("#round-select").on("select2:select", function(event) {
         var round = event.params.data;
@@ -40,7 +40,7 @@ $(document).ready(function () {
         clamp($("#score-score").attr({
             "max": round.max_score
         }), round.max_score);
-        if (round.type === "Indoors" || round.type === "Imperial" || round.type === "Clout") {
+        if (round.type.indexOf("Indoors") > -1 || round.type === "Imperial" || round.type === "Clout") {
             $("#score-xs").prop("disabled", true);
         } else {
             $("#score-xs").prop("disabled", false);

@@ -18,8 +18,43 @@ class Scores(db.Model):
     archer = db.relationship('Archers', backref=db.backref('scores', uselist=False))
     event = db.relationship('Events', backref=db.backref('scores', uselist=False))
 
-    def __init__(self, id, archer_id, round_id, event_id, bow_type, category, score, num_hits, num_golds, num_xs, date):
-        self.id = id
+    def __init__(self, archer_id, round_id, event_id, bow_type, category, score, num_hits, num_golds, num_xs, date):
+        self.archer_id = archer_id
+        self.round_id = round_id
+        self.event_id = event_id
+        self.bow_type = bow_type
+        self.category = category
+        self.score = score
+        self.num_hits = num_hits
+        self.num_golds = num_golds
+        self.num_xs = num_xs
+        self.date = date
+
+    def __repr__(self):
+        return '<Score id: {} score: {} hits: {} golds: {} date: {}>'.format(self.id, self.score, self.num_hits,
+                                                                             self.num_golds, self.date)
+
+
+class QueuedScores(db.Model):
+    __tablename__ = 'scores_queue'
+
+    id = db.Column(db.Integer, primary_key=True)
+    archer_id = db.Column(db.Integer, db.ForeignKey('archers.id'), nullable=False)
+    round_id = db.Column(db.Integer, db.ForeignKey('rounds.id'), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
+    bow_type = db.Column(db.Integer, db.ForeignKey('bow_types.id'), nullable=False)
+    category = db.Column(db.Enum('Novice', 'Experienced', name='CATEGORY'), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    num_hits = db.Column(db.Integer, nullable=False)
+    num_golds = db.Column(db.Integer, nullable=False)
+    num_xs = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=False)
+    round = db.relationship('Rounds', backref=db.backref('queued_scores', uselist=False))
+    bow = db.relationship('BowTypes', backref=db.backref('queued_scores', uselist=False))
+    archer = db.relationship('Archers', backref=db.backref('queued_scores', uselist=False))
+    event = db.relationship('Events', backref=db.backref('queued_scores', uselist=False))
+
+    def __init__(self, archer_id, round_id, event_id, bow_type, category, score, num_hits, num_golds, num_xs, date):
         self.archer_id = archer_id
         self.round_id = round_id
         self.event_id = event_id
@@ -146,8 +181,7 @@ class BowTypes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode(255), nullable=False)
 
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, name):
         self.name = name
 
     def __repr__(self):
@@ -158,7 +192,7 @@ class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode(255), nullable=False)
 
-    def __init__(self, id, name):
+    def __init__(self, name):
         self.id = id
         self.name = name
 
@@ -175,8 +209,7 @@ class Rounds(db.Model):
     max_score = db.Column(db.Integer, nullable=False)
     scoring_zones = db.Column(db.Enum('5', '10', name='SCORING_ZONES'), nullable=False)
 
-    def __init__(self, id, name, r_type, max_hits, max_score, scoring_zones):
-        self.id = id
+    def __init__(self, name, r_type, max_hits, max_score, scoring_zones):
         self.name = name
         self.r_type = r_type
         self.max_hits = max_hits
@@ -202,8 +235,7 @@ class Archers(db.Model):
     card_number = db.Column(db.Unicode(7), nullable=True)
     agb_card = db.Column(db.Unicode(10), nullable=True)
 
-    def __init__(self, id, first_name, last_name, gender, email, card_number, agb_card):
-        self.id = id
+    def __init__(self, first_name, last_name, gender, email, card_number, agb_card):
         self.first_name = first_name
         self.last_name = last_name
         self.gender = gender

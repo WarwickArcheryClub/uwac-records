@@ -13,3 +13,10 @@ SECRET_KEY = 'shh its a secret'
 
 # Enable CSRF on all site requests
 CSRF_ENABLED = True
+
+# Email settings
+MAIL_SERVER = 'your.smtp.server.here'
+MAIL_PORT = 465
+MAIL_USE_SSL = True
+MAIL_USERNAME = 'your@email.here'
+MAIL_PASSWORD = 'yourPassw0rdH3re'

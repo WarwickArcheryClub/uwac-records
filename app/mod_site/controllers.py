@@ -285,7 +285,8 @@ def event_by_id_date(event_id, event_date):
     event = Events.query.get(event_id)
     categories_shot = db.session.query(Scores.round_id.distinct().label('round_id'), Scores.bow_type.label('bow_type'),
                                        (Rounds.name + ' ' + BowTypes.name).label('div_name')).join(Scores.round).join(
-        Scores.bow).filter(Scores.event_id == event_id).filter(Scores.date == event_date).all()
+        Scores.bow).filter(Scores.event_id == event_id).filter(Scores.date == event_date).order_by(
+        db.desc(Scores.bow_type)).all()
     categories = []
     for cat in categories_shot:
         category = {
@@ -322,7 +323,7 @@ def round_by_id(round_id):
     round = Rounds.query.get(round_id)
     categories_shot = db.session.query(Scores.bow_type.distinct().label('bow_type'), Archers.gender.label('gender'),
                                        (Archers.gender + ' ' + BowTypes.name).label('div_name')).filter(
-        Scores.round_id == round_id).join(Scores.archer).join(Scores.bow).order_by(Scores.bow_type).order_by(
+        Scores.round_id == round_id).join(Scores.archer).join(Scores.bow).order_by(db.desc(Scores.bow_type)).order_by(
         Archers.gender).all()
     categories = []
     for cat in categories_shot:

@@ -4,7 +4,7 @@ from datetime import date
 from threading import Thread
 
 import Levenshtein as lev
-from flask import Blueprint, render_template, request, Response, redirect, flash
+from flask import Blueprint, render_template, request, Response, redirect, flash, url_for
 from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classifications, Rounds, Events, QueuedScores
 from app import mail, app
 from flask_mail import Message
@@ -185,10 +185,9 @@ def send_email(score):
                 cat_csv=condense_category(score.archer.gender, score.category), bow_csv=score.bow.name,
                 round_csv=score.round.name, date_csv=date.strftime(score.date, '%d/%m/%Y'), event_csv=score.event.name,
                 score_csv=score.score, hits_csv=score.num_hits, golds_csv=score.num_golds, xs_csv=score.num_xs or '',
-                approve='#',
-                reject='#')
-
-    # TODO: Generate correct approval/rejection links
+                approve=app.config['SITE_URL'] + mod_site.url_prefix + url_for('admin.approve_score',
+                                                                               score_id=score.id),
+                reject=app.config['SITE_URL'] + mod_site.url_prefix + url_for('admin.reject_score', score_id=score.id))
 
     thread = Thread(target=send_async_email, args=[msg])
     thread.start()

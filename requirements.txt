@@ -1,10 +1,11 @@
 blinker==1.4
 Flask==0.10.1
+Flask-Login==0.3.0
 Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.0
 Flask-WTF==0.12
 itsdangerous==0.24
-Jinja2==2.7.3
+Jinja2==2.8
 MarkupSafe==0.23
 psycopg2==2.6.1
 python-Levenshtein==0.12.0

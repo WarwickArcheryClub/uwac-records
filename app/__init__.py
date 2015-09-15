@@ -2,10 +2,16 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_wtf.csrf import CsrfProtect
+from flask_login import LoginManager
 
 # Init app
 app = Flask(__name__)
 app.config.from_object('config')
+
+# Init login manager
+login = LoginManager()
+login.init_app(app)
+login.login_view = '/admin/login'
 
 # Init database
 db = SQLAlchemy(app)
@@ -27,10 +33,12 @@ from app.mod_site.converters import DateConverter
 app.url_map.converters['date'] = DateConverter
 
 # Register blueprints
+from app.mod_admin.controllers import mod_admin as admin_module
 from app.mod_site.controllers import mod_site as site_module
 from app.mod_api.controllers import mod_api as api_module
 
-app.register_blueprint(site_module, url_prefix='/records')
+app.register_blueprint(admin_module)
+app.register_blueprint(site_module)
 app.register_blueprint(api_module)
 
 # Init CSRF

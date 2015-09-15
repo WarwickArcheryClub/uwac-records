@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'User Registration - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="small-12 columns">
+            {% with messages = get_flashed_messages(category_filter=['submission']) %}
+                {% if messages %}
+                    {% for msg in messages %}
+                        {% if 'success' in msg %}
+                            <div data-alert class="alert-box success radius">
+                                {{ msg }}
+                                <a href="#" class="close">&times;</a>
+                            </div>
+                        {% else %}
+                            <div data-alert class="alert-box alert radius">
+                                {{ msg }}
+                                <a href="#" class="close">&times;</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form action="/admin/register/new" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                <div class="row collapse">
+                    <div class="small-12 medium-8 medium-offset-2 large-6 large-offset-3 columns">
+                        <h3>Register new user:</h3>
+
+                        <div class="row">
+                            <label>
+                                Username
+                                <input class="radius" name="username" id="username" type="text"/>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label>
+                                Password
+                                <input class="radius" name="password" id="password" type="password"/>
+                            </label>
+                        </div>
+                        <button class="button radius small pull-right" type="submit">Register</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

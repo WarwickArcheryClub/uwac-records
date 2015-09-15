@@ -1,4 +1,37 @@
-from app import db
+import datetime
+
+from app import db, login
+
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Unicode(255), nullable=False)
+    password = db.Column(db.Binary(60), nullable=False)
+    created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    def __init__(self, name, password):
+        self.name = name
+        self.password = password
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anyonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
+    def __repr__(self):
+        return '<User {name}>'.format(name=self.name)
+
+
+@login.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
 
 
 class Scores(db.Model):

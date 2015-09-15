@@ -9,7 +9,7 @@ from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classif
 from app import mail, app
 from flask_mail import Message
 
-mod_site = Blueprint('site', __name__)
+mod_site = Blueprint('site', __name__, url_prefix='/records')
 
 
 @mod_site.route('/', methods=['GET'])

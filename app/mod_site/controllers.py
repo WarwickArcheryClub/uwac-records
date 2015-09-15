@@ -170,12 +170,12 @@ def send_email(score):
         'New score submitted by {name}'.format(name=score.archer.get_name()),
         recipients=app.config['MAIL_RECORDS']
     )
-    msg.html = '{name} has submitted a score:<br/>' \
+    msg.html = '{name} has submitted a score:<br/><br/>' \
                '{round} on {date} as {category}<br/>' \
-               'score: {score}, hits: {hits}, golds: {golds}, Xs: {xs}<br/><br/>' \
+               'Score: {score}, hits: {hits}, golds: {golds}, Xs: {xs}<br/><br/>' \
                'CSV format:<br/>' \
-               '{name_csv};{cat_csv};{bow_csv};{round_csv};{date_csv};{event_csv}:{score_csv};{hits_csv};' \
-               '{golds_csv};{xs_csv};<br/><br/>' \
+               '<pre>{name_csv};{cat_csv};{bow_csv};{round_csv};{date_csv};{event_csv};{score_csv};{hits_csv};' \
+               '{golds_csv};{xs_csv};</pre><br/>' \
                'To approve the score click <a href="{approve}">here</a> or to reject click ' \
                '<a href="{reject}">this link</a><br/><br/>' \
                'This email was automatically generated, please don\'t reply.' \

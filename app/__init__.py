@@ -1,5 +1,6 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 from flask_wtf.csrf import CsrfProtect
 
 # Init app
@@ -8,6 +9,9 @@ app.config.from_object('config')
 
 # Init database
 db = SQLAlchemy(app)
+
+# Init mail server
+mail = Mail(app)
 
 # Register custom Jinja2 filters
 from app.mod_site.filters import strip_spaces

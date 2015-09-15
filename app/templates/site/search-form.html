@@ -1,8 +1,31 @@
 <div id="top" class="row">
-    <div>
-        <h1 id="browse-tab" class="small-6 columns form-tab text-left active"><a href="#browse">Browse</a></h1>
+    <div class="small-12 columns">
+        {% with messages = get_flashed_messages(category_filter=['submission']) %}
+            {% if messages %}
+                {% for msg in messages %}
+                    {% if 'success' in msg %}
+                        <div data-alert class="alert-box success radius">
+                            {{ msg }}
+                            <a href="#" class="close">&times;</a>
+                        </div>
+                    {% else %}
+                        <div data-alert class="alert-box alert radius">
+                            {{ msg }}
+                            <a href="#" class="close">&times;</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="row collapse">
+            <h1 id="browse-tab" class="small-6 columns form-tab text-left active">
+                <a href="#browse">Browse</a>
+            </h1>
 
-        <h1 id="submit-tab" class="small-6 columns form-tab text-right"><a href="#submit">Submit</a></h1>
+            <h1 id="submit-tab" class="small-6 columns form-tab text-right">
+                <a href="#submit">Submit</a>
+            </h1>
+        </div>
     </div>
     <div class="small-12 columns content-active" id="browse">
         <h4>Start typing a name, event or round in the input below and select the item you want.</h4>
@@ -27,9 +50,10 @@
         </form>
     </div>
     <div class="small-12 columns" id="submit">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <form method="post" action="/records/submit">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <input type="hidden" name="origin" value="{{ request.path }}"/>
 
-        <form>
             <div class="row">
                 <div class="small-12 columns">
                     <h5>Score details</h5>
@@ -42,8 +66,9 @@
                             <span class="prefix">Archer</span>
                         </div>
                         <div class="small-10 columns">
-                            <select id="archer-select" class="select2" data-placeholder="Select an archer"
-                                    data-width="100%" data-ajax--url="/api/suggestions/archers"></select>
+                            <select id="archer-select" name="archer-select" class="select2"
+                                    data-placeholder="Select an archer" data-width="100%"
+                                    data-ajax--url="/api/suggestions/archers"></select>
                         </div>
                     </div>
                 </div>
@@ -53,31 +78,33 @@
                             <span class="prefix">Round</span>
                         </div>
                         <div class="small-10 columns">
-                            <select id="round-select" class="select2" data-placeholder="Select a round"
-                                    data-width="100%" data-ajax--url="/api/suggestions/rounds"></select>
+                            <select id="round-select" name="round-select" class="select2"
+                                    data-placeholder="Select a round" data-width="100%"
+                                    data-ajax--url="/api/suggestions/rounds"></select>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="medium-4 columns">
+                <div class="medium-3 columns">
                     <div class="row collapse prefix-radius">
                         <div class="small-2 medium-3 columns">
                             <span class="prefix">Event</span>
                         </div>
                         <div class="small-10 medium-9 columns">
-                            <select id="event-select" class="select2" data-placeholder="Select an event"
-                                    data-width="100%" data-ajax--url="/api/suggestions/events"></select>
+                            <select id="event-select" name="event-select" class="select2"
+                                    data-placeholder="Select an event" data-width="100%"
+                                    data-ajax--url="/api/suggestions/events"></select>
                         </div>
                     </div>
                 </div>
-                <div class="medium-4 columns">
+                <div class="medium-3 columns">
                     <div class="row collapse prefix-radius">
                         <div class="small-2 medium-3 columns">
                             <span class="prefix">Style</span>
                         </div>
                         <div class="small-10 medium-9 columns">
-                            <select>
+                            <select name="bow-select" id="bow-select">
                                 {% for bow in bow_types %}
                                     <option value="{{ bow.id }}">{{ bow.name }}</option>
                                 {% endfor %}
@@ -85,13 +112,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="medium-4 columns end">
+                <div class="medium-3 columns end">
                     <div class="row collapse prefix-radius">
                         <div class="small-2 medium-3 columns">
                             <span class="prefix">Date</span>
                         </div>
                         <div class="small-10 medium-9 columns">
-                            <input type="date" id="date-input">
+                            <input type="date" name="date-input" id="date-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="medium-3 columns end">
+                    <div class="row collapse prefix-radius">
+                        <div class="small-2 medium-3 columns">
+                            <span class="prefix">N/E</span>
+                        </div>
+                        <div class="small-10 medium-9 columns">
+                            <select name="category-select" id="category-select">
+                                <option value="E">Experienced</option>
+                                <option value="N">Novice</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -103,7 +143,7 @@
                             <span class="prefix">Hits</span>
                         </div>
                         <div class="small-9 columns">
-                            <input type="number" id="score-hits" value="0" min="0">
+                            <input type="number" name="score-hits" id="score-hits" value="0" min="0">
                         </div>
                     </div>
                 </div>
@@ -113,7 +153,7 @@
                             <span class="prefix">Score</span>
                         </div>
                         <div class="small-9 columns">
-                            <input type="number" id="score-score" value="0" min="0">
+                            <input type="number" name="score-score" id="score-score" value="0" min="0">
                         </div>
                     </div>
                 </div>
@@ -123,7 +163,7 @@
                             <span class="prefix">Golds</span>
                         </div>
                         <div class="small-9 columns">
-                            <input type="number" id="score-golds" value="0" min="0">
+                            <input type="number" name="score-golds" id="score-golds" value="0" min="0">
                         </div>
                     </div>
                 </div>
@@ -133,7 +173,7 @@
                             <span class="prefix">Xs</span>
                         </div>
                         <div class="small-9 columns">
-                            <input type="number" id="score-xs" placeholder="" min="0">
+                            <input type="number" name="score-xs" id="score-xs" value="0" min="0">
                         </div>
                     </div>
                 </div>

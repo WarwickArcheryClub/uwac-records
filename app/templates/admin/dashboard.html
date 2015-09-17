@@ -30,9 +30,10 @@
             </section>
             <section>
                 <ul>
-                    <li><a href="{{ url_for('admin.list_scores') }}">Approve/reject archer's scores</a></li>
+                    <li><a href="{{ url_for('admin.approve_scores') }}">Approve/reject archer's scores</a></li>
                     <li><a href="{{ url_for('admin.export_scores') }}">Generate monthly scores</a></li>
                     <li><a href="{{ url_for('admin.import_members') }}">Import members</a></li>
+                    {# TODO: Create page to edit scores #}
                 </ul>
             </section>
         </div>

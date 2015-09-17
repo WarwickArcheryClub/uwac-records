@@ -11,7 +11,7 @@ app.config.from_object('config')
 # Init login manager
 login = LoginManager()
 login.init_app(app)
-login.login_view = '/admin/login'
+login.login_view = '/records/admin/login'
 
 # Init database
 db = SQLAlchemy(app)

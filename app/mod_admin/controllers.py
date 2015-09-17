@@ -52,10 +52,12 @@ def reject_score(score_id):
         return redirect(url_for('.dashboard'))
 
 
-@mod_admin.route('/scores', methods=['GET'])
+@mod_admin.route('/scores/queued', methods=['GET'])
 @login_required
-def list_scores():
-    return render_template('admin/scores.html')
+def approve_scores():
+    scores = QueuedScores.query.all()
+
+    return render_template('admin/scores-approve.html', scores=scores)
 
 
 @mod_admin.route('/scores/export', methods=['GET'])

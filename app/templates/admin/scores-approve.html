@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'Submitted Scores List - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="small-12 columns">
+            <section class="bottom-divider">
+                <h4><a href="{{ url_for('admin.dashboard') }}">Back to dashboard</a></h4>
+
+                <h1>Score Queue</h1>
+
+                <p>All scores listed below are awaiting approval or rejection.</p>
+            </section>
+            <section>
+                {% if not scores %}
+                    <h2 class="text-center">There are no scores in the queue right now!</h2>
+                {% else %}
+                    <table class="full-width pad-top">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Round</th>
+                            <th>Score/Hits/Golds/Xs</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for score in scores %}
+                            <tr>
+                                <td>{{ score.archer.get_name() }}</td>
+                                <td>{{ score.round.name }}</td>
+                                <td>{{ "{score}/{hits}/{golds}/{xs}".format(score=score.score, hits=score.num_hits,
+                                                                        golds=score.num_golds, xs=(score.xs or 0)) }}</td>
+                                <td>{{ score.category }}</td>
+                                <td>{{ score.date }}</td>
+                                <td>
+                                    {# TODO: Create JS to approve/reject #}
+                                    <a class="item-action" href="#"><i class="fa fa-check"></i></a>
+                                    <a class="item-action" href="#"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+{% endblock %}

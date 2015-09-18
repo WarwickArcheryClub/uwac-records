@@ -277,8 +277,29 @@ class Archers(db.Model):
         self.agb_card = agb_card
 
     def __repr__(self):
-        return "<Archer name: {} {} id: {} card_num: {}>".format(self.first_name, self.last_name, self.id,
+        return '<Archer name: {} {} id: {} card_num: {}>'.format(self.first_name, self.last_name, self.id,
                                                                  self.card_number)
 
     def get_name(self):
-        return self.first_name + " " + self.last_name
+        return self.first_name + ' ' + self.last_name
+
+
+class NewArchers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.Unicode(255), nullable=False)
+    last_name = db.Column(db.Unicode(255), nullable=False)
+    email = db.Column(db.Unicode(255), nullable=True)
+    card_number = db.Column(db.Unicode(7), nullable=True)
+
+    def __init__(self, first_name, last_name, email, card_number):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.card_number = card_number
+
+    def __repr__(self):
+        return '<NewArcher name: {name} id: {id} email: {email} card_num: {cnum}'.format(
+            name=self.first_name + ' ' + self.last_name, id=self.id, email=self.email, cnum=self.card_number)
+
+    def get_name(self):
+        return self.first_name + ' ' + self.last_name

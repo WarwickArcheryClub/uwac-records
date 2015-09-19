@@ -1,3 +1,5 @@
+import os
+
 # Debug flag, turn off in production
 DEBUG = True
 
@@ -5,8 +7,6 @@ DEBUG = True
 SQLALCHEMY_DATABASE_URI = "engine://username:password@host/database"
 
 # Define the application directory
-import os
-
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Secret key for sessions - CSRF uses the same key
@@ -17,6 +17,9 @@ CSRF_ENABLED = True
 
 # Base URL for use in link construction
 SITE_URL = 'yourclubsweb.site'
+
+# Sport club members API endpoint
+WS_API_ENDPOINT = 'http://sportsclub.api/endpoint/here'
 
 # Email settings
 MAIL_SERVER = 'your.smtp.server.here'

@@ -3,9 +3,17 @@ from threading import Thread
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, login_user
 from flask_mail import Message
-from app.models import Users, QueuedScores, Scores
+from app.models import Users, QueuedScores, Scores, NewArchers, Archers
 from app import app, db, mail
+from genderize import Genderize
+import requests
 import bcrypt
+
+# Use the C ElementTree implementation where possible
+try:
+    from xml.etree.cElementTree import ElementTree, fromstring
+except ImportError:
+    from xml.etree.ElementTree import ElementTree, fromstring
 
 mod_admin = Blueprint('admin', __name__, url_prefix='/records/admin')
 
@@ -60,16 +68,79 @@ def approve_scores():
     return render_template('admin/scores-approve.html', scores=scores)
 
 
+@mod_admin.route('/scores/edit', methods=['GET'])
+@login_required
+def edit_scores():
+    return render_template('admin/scores-export.html')
+
+
 @mod_admin.route('/scores/export', methods=['GET'])
 @login_required
 def export_scores():
     return render_template('admin/scores-export.html')
 
 
-@mod_admin.route('/members', methods=['GET'])
+@mod_admin.route('/members/import', methods=['GET'])
 @login_required
 def import_members():
-    return render_template('admin/members.html')
+    xml_request = requests.get(app.config['WS_API_ENDPOINT'])
+
+    root_element = fromstring(xml_request.text.encode('utf-8'))
+
+    new_archers = []
+
+    for child in root_element:
+        f_name = unicode(child.find('FirstName').text.title(), 'utf-8')
+        l_name = unicode(child.find('LastName').text.title(), 'utf-8')
+        try:
+            card_num = unicode(child.find('UniqueID').text, 'utf-8')
+        except TypeError:
+            card_num = None
+
+        try:
+            email = unicode(child.find('EmailAddress').text, 'utf-8')
+        except TypeError:
+            email = None
+
+        archer = NewArchers(f_name, l_name, email, card_num)
+
+        if card_num:
+            if Archers.query.filter(Archers.card_number == archer.card_number).first():
+                continue
+            elif NewArchers.query.filter(NewArchers.card_number == archer.card_number).first():
+                continue
+        else:
+            if Archers.query.filter(Archers.first_name.like(archer.first_name)).filter(
+                    Archers.last_name.like(archer.last_name)).first():
+                continue
+            elif NewArchers.query.filter(NewArchers.first_name.like(archer.first_name)).filter(
+                    NewArchers.last_name.like(archer.last_name)).first():
+                continue
+
+        new_archers.append(archer)
+
+    genderize = Genderize()
+
+    for chunk in chunks(new_archers, 10):
+        result = zip(chunk, genderize.get(map(get_first_name, chunk)))
+        for item in result:
+            new_archer, gender = item
+            try:
+                if float(gender['probability']) >= 0.5:
+                    assigned = Archers(new_archer.first_name, new_archer.last_name,
+                                       'M' if u'male' in gender['gender'] else 'F', new_archer.email,
+                                       new_archer.card_number, None)
+                    db.session.add(assigned)
+                else:
+                    db.session.add(new_archer)
+            except KeyError:
+                db.session.add(new_archer)
+
+    db.session.commit()
+
+    need_assignment = NewArchers.query.all()
+
+    return render_template('admin/members.html', archers=need_assignment)
 
 
 @mod_admin.route('/login', methods=['GET'])
@@ -152,3 +223,16 @@ def send_mail(user):
 def send_async_email(msg):
     with app.app_context():
         mail.send(msg)
+
+
+def get_first_name(item):
+    if type(item) is NewArchers:
+        return item.first_name
+    else:
+        return None
+
+
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in xrange(0, len(l), n):
+        yield l[i:i + n]

@@ -40,6 +40,9 @@
                             <th class="sort-header reverse">Experience</th>
                             <th>Classification</th>
                             <th class="sort-header">Date</th>
+                            {% if current_user.is_authenticated %}
+                                <th>Actions</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -53,6 +56,16 @@
                                 <td>{{ score['category'] }}</td>
                                 <td>{{ score['classification'] if score['classification'] else '' }}</td>
                                 <td>{{ score['date'] }}</td>
+                                {% if current_user.is_authenticated %}
+                                    <td>
+                                        <a class="admin-action"
+                                           href="{{ url_for('admin.edit_score', score_id=score.id) }}?next={{ request.path | urlencode }}"><i
+                                                class="fa fa-pencil"></i> Edit</a>
+                                        <a class="admin-action"
+                                           href="{{ url_for('admin.delete_score', score_id=score.id) }}?next={{ request.path | urlencode }}"><i
+                                                class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

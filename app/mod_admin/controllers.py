@@ -104,10 +104,45 @@ def update_score_status():
     return redirect(url_for('.approve_scores'))
 
 
-@mod_admin.route('/scores/edit', methods=['GET'])
+# TODO: Create score search interface
+# @mod_admin.route('/scores/edit', methods=['GET'])
+# @login_required
+# def edit_scores():
+#     return render_template('admin/scores-export.html')
+
+
+@mod_admin.route('/scores/edit/<int:score_id>', methods=['GET'])
 @login_required
-def edit_scores():
-    return render_template('admin/scores-export.html')
+def edit_score(score_id):
+    score = Scores.query.get(score_id)
+
+    if not score:
+        return redirect(url_for('.dashboard'))
+
+    return render_template('admin/score-edit.html')
+
+
+@mod_admin.route('/scores/delete/<int:score_id>', methods=['GET'])
+@login_required
+def delete_score(score_id):
+    score = Scores.query.get(score_id)
+
+    if not score:
+        try:
+            flash('Score doesn\'t exist', 'submission')
+            return redirect(request.args['next'])
+        except KeyError:
+            return redirect(url_for('.dashboard'))
+
+    db.session.delete(score)
+    db.session.commit()
+
+    flash('Score successfully deleted', 'submission')
+
+    try:
+        return redirect(request.args['next'])
+    except KeyError:
+        return redirect(url_for('.dashboard'))
 
 
 @mod_admin.route('/scores/export', methods=['GET'])

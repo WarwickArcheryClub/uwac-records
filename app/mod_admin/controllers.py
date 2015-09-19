@@ -1,13 +1,18 @@
 from threading import Thread
+from time import strptime, mktime
+from datetime import date
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, login_user
 from flask_mail import Message
-from app.models import Users, QueuedScores, Scores, NewArchers, Archers
+from app.mod_site.controllers import is_integer, is_date, is_category, category_map
+from app.models import Users, QueuedScores, Scores, NewArchers, Archers, BowTypes, Rounds, Events
 from app import app, db, mail
 from genderize import Genderize
 import requests
 import bcrypt
+
+
 
 # Use the C ElementTree implementation where possible
 try:
@@ -104,13 +109,6 @@ def update_score_status():
     return redirect(url_for('.approve_scores'))
 
 
-# TODO: Create score search interface
-# @mod_admin.route('/scores/edit', methods=['GET'])
-# @login_required
-# def edit_scores():
-#     return render_template('admin/scores-export.html')
-
-
 @mod_admin.route('/scores/edit/<int:score_id>', methods=['GET'])
 @login_required
 def edit_score(score_id):
@@ -119,7 +117,138 @@ def edit_score(score_id):
     if not score:
         return redirect(url_for('.dashboard'))
 
-    return render_template('admin/score-edit.html')
+    try:
+        next_url = request.args['next']
+    except KeyError:
+        next_url = url_for('.dashboard')
+
+    return render_template('admin/score-edit.html', score=score, next=next_url, bow_types=BowTypes.query.all())
+
+
+@mod_admin.route('/scores/update', methods=['POST'])
+@login_required
+def update_score():
+    print request.form.__repr__()
+
+    try:
+        if not request.form['bow-select'] or \
+                not request.form['archer-select'] or \
+                not request.form['round-select'] or \
+                not request.form['event-select'] or \
+                not request.form['category-select'] or \
+                not request.form['date-input'] or \
+                not request.form['score-hits'] or \
+                not request.form['score-score'] or \
+                not request.form['score-golds'] or \
+                not request.form['score-id'] or \
+                not request.form['origin']:
+            flash('Incomplete score', 'submission')
+            return redirect(request.form['origin'])
+    except KeyError:
+        flash('Incomplete score', 'submission')
+        return redirect(url_for('.dashboard'))
+
+    if 'score-xs' in request.form:
+        if not request.form['score-xs']:
+            flash('Incomplete score', 'submission')
+            return redirect(request.form['origin'])
+
+    if not is_integer(request.form['bow-select']) or \
+            not is_integer(request.form['archer-select']) or \
+            not is_integer(request.form['round-select']) or \
+            not is_integer(request.form['event-select']) or \
+            not is_category(request.form['category-select']) or \
+            not is_date(request.form['date-input']) or \
+            not is_integer(request.form['score-hits']) or \
+            not is_integer(request.form['score-score']) or \
+            not is_integer(request.form['score-golds']) or \
+            not is_integer(request.form['score-id']):
+        flash('Unexpected score information type', 'submission')
+        return redirect(request.form['origin'])
+
+    if 'score-xs' in request.form:
+        if not is_integer(request.form['score-xs']):
+            flash('Unexpected score information type', 'submission')
+            return redirect(request.form['origin'])
+
+    if not db.session.query(db.exists().where(Archers.id == request.form['archer-select'])).scalar():
+        flash('Archer doesn\'t exist', 'submission')
+        return redirect(request.form['origin'])
+    archer = Archers.query.get(request.form['archer-select'])
+
+    if not db.session.query(db.exists().where(Rounds.id == request.form['round-select'])).scalar():
+        flash('Round doesn\'t exist', 'submission')
+        return redirect(request.form['origin'])
+    score_round = Rounds.query.get(request.form['round-select'])
+
+    if not db.session.query(db.exists().where(Events.id == request.form['event-select'])).scalar():
+        flash('Event doesn\'t exist', 'submission')
+        return redirect(request.form['origin'])
+    event = Events.query.get(request.form['event-select'])
+
+    if not db.session.query(db.exists().where(BowTypes.id == request.form['bow-select'])).scalar():
+        flash('Bow type doesn\'t exist', 'submission')
+        return redirect(request.form['origin'])
+    bow_type = BowTypes.query.get(request.form['bow-select'])
+
+    if int(request.form['score-hits']) not in range(0, score_round.max_hits + 1):
+        flash('Incorrect number of hits', 'submission')
+        return redirect(request.form['origin'])
+    hits = int(request.form['score-hits'])
+
+    if int(request.form['score-golds']) not in range(0, score_round.max_hits + 1):
+        flash('Incorrect number of golds', 'submission')
+        return redirect(request.form['origin'])
+    golds = int(request.form['score-golds'])
+
+    if 'score-xs' in request.form:
+        if int(request.form['score-xs']) not in range(0, golds + 1):
+            flash('Incorrect number of Xs', 'submission')
+            return redirect(request.form['origin'])
+        else:
+            if score_round.r_type is 'Clout' or 'Indoors' in score_round.r_type:
+                xs = None
+            else:
+                xs = int(request.form['score-xs'])
+    else:
+        if score_round.r_type is 'Clout' or 'Indoors' in score_round.r_type:
+            xs = None
+        else:
+            xs = 0
+
+    if int(request.form['score-score']) not in range(0, score_round.max_score + 1):
+        flash('Incorrect score', 'submission')
+        return redirect(request.form['origin'])
+    score = int(request.form['score-score'])
+
+    category = category_map(request.form['category-select'])
+    score_date = date.fromtimestamp(mktime(strptime(request.form['date-input'], '%Y-%m-%d')))
+
+    old_score = Scores.query.get(int(request.form['score-id']))
+
+    if not old_score:
+        flash('Original score doesn\'t exist', 'submission')
+        return redirect(request.form['origin'])
+
+    old_score.archer_id = archer.id
+    old_score.round_id = score_round.id
+    old_score.event_id = event.id
+    old_score.bow_type = bow_type.id
+    old_score.category = category
+    old_score.score = score
+    old_score.num_hits = hits
+    old_score.num_golds = golds
+    old_score.num_xs = xs
+    old_score.date = score_date
+
+    db.session.commit()
+
+    flash('Updated score successfully', 'submission')
+
+    try:
+        return redirect(request.form['origin'])
+    except KeyError:
+        return redirect(url_for('.dashboard'))
 
 
 @mod_admin.route('/scores/delete/<int:score_id>', methods=['GET'])

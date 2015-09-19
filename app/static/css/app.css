@@ -8809,6 +8809,10 @@ table.full-width input[type="radio"] {
     margin: 0
 }
 
+a.admin-action {
+    margin: 0px 5px
+}
+
 span.fade {
     color: #aaa
 }

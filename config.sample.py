@@ -15,6 +15,9 @@ SECRET_KEY = 'shh its a secret'
 # Enable CSRF on all site requests
 CSRF_ENABLED = True
 
+# Login session strength
+SESSION_PROTECTION = 'strong'
+
 # Base URL for use in link construction
 SITE_URL = 'yourclubsweb.site'
 

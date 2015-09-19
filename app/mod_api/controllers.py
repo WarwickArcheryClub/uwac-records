@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, request, Response, abort
 from app.models import Rounds, Events, Archers
-import Levenshtein as lev
+import Levenshtein as Lev
 
 mod_api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -23,9 +23,8 @@ def all_suggestions():
                                (Archers.first_name + u' ' + Archers.last_name).ilike(u'%{}%'.format(query))).all()))
 
     response = Response(
-        json.dumps({'suggestions':
-                        sorted(suggestions, key=SuggestionUtils.get_key,
-                               cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
+        json.dumps({'suggestions': sorted(suggestions, key=SuggestionUtils.get_key,
+                                          cmp=lambda x, y: Lev.distance(x, query) - Lev.distance(y, query))}))
     response.headers['Content-Type'] = 'application/json'
     return response
 
@@ -41,7 +40,7 @@ def archers_suggestions():
         (Archers.first_name + " " + Archers.last_name).ilike(u'%{}%'.format(query))).all())
 
     response = Response(json.dumps({'results': sorted(suggestions, key=SuggestionUtils.get_select2_key,
-                                                      cmp=lambda x, y: lev.distance(x, query) - lev.distance(y,
+                                                      cmp=lambda x, y: Lev.distance(x, query) - Lev.distance(y,
                                                                                                              query))}))
     response.headers['Content-Type'] = 'application/json'
     return response
@@ -56,9 +55,9 @@ def rounds_suggestions():
 
     suggestions = map(SuggestionUtils.to_select2, Rounds.query.filter(Rounds.name.ilike(u'%{}%'.format(query))).all())
 
-    response = Response(json.dumps({'results':
-                                        sorted(suggestions, key=SuggestionUtils.get_select2_key,
-                                               cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
+    response = Response(json.dumps({'results': sorted(suggestions, key=SuggestionUtils.get_select2_key,
+                                                      cmp=lambda x, y: Lev.distance(x, query) - Lev.distance(y,
+                                                                                                             query))}))
     response.headers['Content-Type'] = 'application/json'
     return response
 
@@ -72,9 +71,9 @@ def events_suggestions():
 
     suggestions = map(SuggestionUtils.to_select2, Events.query.filter(Events.name.ilike(u'%{}%'.format(query))).all())
 
-    response = Response(json.dumps({'results':
-                                        sorted(suggestions, key=SuggestionUtils.get_select2_key,
-                                               cmp=lambda x, y: lev.distance(x, query) - lev.distance(y, query))}))
+    response = Response(json.dumps({'results': sorted(suggestions, key=SuggestionUtils.get_select2_key,
+                                                      cmp=lambda x, y: Lev.distance(x, query) - Lev.distance(y,
+                                                                                                             query))}))
     response.headers["Content-Type"] = 'application/json'
     return response
 

@@ -238,7 +238,7 @@ def search():
             return redirect('/records/400')
 
         archers = sorted(
-            Archers.query.filter((Archers.first_name + ' ' + Archers.last_name).ilike(u'%{}%'.format(query))).all(),
+            Archers.query.filter((Archers.first_name + u' ' + Archers.last_name).ilike(u'%{}%'.format(query))).all(),
             key=get_key,
             cmp=lambda x, y: lev.distance(x.lower(), query.lower()) - lev.distance(y.lower(), query.lower()))
         rounds = sorted(Rounds.query.filter(Rounds.name.ilike(u'%{}%'.format(query))).all(), key=get_key,
@@ -355,7 +355,7 @@ def archer_by_id(archer_id):
 
     archer = Archers.query.get(archer_id)
     categories_shot = db.session.query(Scores.round_id.distinct().label('round_id'), Scores.bow_type.label('bow_type'),
-                                       (Rounds.name + ' ' + BowTypes.name).label('div_name')).filter(
+                                       (Rounds.name + u' ' + BowTypes.name).label('div_name')).filter(
         Scores.archer_id == archer_id).join(Scores.bow).join(Scores.round).order_by('div_name').all()
     categories = []
     for cat in categories_shot:

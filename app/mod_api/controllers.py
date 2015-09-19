@@ -20,7 +20,7 @@ def all_suggestions():
                            Events.query.filter(Events.name.ilike(u'%{}%'.format(query))).all()))
     suggestions.extend(map(SuggestionUtils.to_suggestion,
                            Archers.query.filter(
-                               (Archers.first_name + ' ' + Archers.last_name).ilike(u'%{}%'.format(query))).all()))
+                               (Archers.first_name + u' ' + Archers.last_name).ilike(u'%{}%'.format(query))).all()))
 
     response = Response(
         json.dumps({'suggestions':

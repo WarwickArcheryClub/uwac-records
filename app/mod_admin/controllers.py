@@ -63,9 +63,7 @@ def reject_score(score_id):
 @mod_admin.route('/scores/queued', methods=['GET'])
 @login_required
 def approve_scores():
-    scores = QueuedScores.query.all()
-
-    return render_template('admin/scores-approve.html', scores=scores)
+    return render_template('admin/scores-approve.html', scores=QueuedScores.query.all())
 
 
 @mod_admin.route('/scores/queued/update', methods=['POST'])

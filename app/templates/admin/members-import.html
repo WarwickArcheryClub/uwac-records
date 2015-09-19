@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'Import Members - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="small-12 columns">
+            {% with messages = get_flashed_messages(category_filter=['submission']) %}
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div data-alert class="alert-box success radius">
+                            {{ msg }}
+                            <a href="#" class="close">&times;</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% if not archers %}
+                <section class="bottom-divider">
+            {% else %}
+                <section>
+            {% endif %}
+            <h4><a href="{{ url_for('admin.dashboard') }}"><i class="fa fa-caret-left"></i> Back to dashboard</a>
+            </h4>
+
+            <h1>Import Members</h1>
+
+            <p>Members listed below require their gender to be entered manually.</p>
+            <h5>
+                <strong>Note: </strong>you can use <a href="https://peoplesearch.warwick.ac.uk/">Warwick People
+                Search</a> to find people's gender.
+            </h5>
+            </section>
+            <section>
+                {% if not archers %}
+                    <h2 class="text-center">No archers need manual entry, yay!</h2>
+                {% else %}
+                    <form action="{{ url_for('admin.assign_members') }}" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                        <table class="full-width pad-top">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Card Number</th>
+                                <th>Male</th>
+                                <th>Female</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for archer in archers %}
+                                <tr>
+                                    <td>{{ archer.get_name() }}</td>
+                                    <td>{{ archer.email }}</td>
+                                    <td>{{ archer.card_number }}</td>
+                                    <td>
+                                        <input type="radio" name="{{ archer.card_number }}" value="M"/>
+                                    </td>
+                                    <td>
+                                        <input type="radio" name="{{ archer.card_number }}" value="F"/>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <button class="button radius small pull-right" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+{% endblock %}

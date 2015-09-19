@@ -140,7 +140,39 @@ def import_members():
 
     need_assignment = NewArchers.query.all()
 
-    return render_template('admin/members.html', archers=need_assignment)
+    return render_template('admin/members-import.html', archers=need_assignment)
+
+
+@mod_admin.route('/members/import/assign', methods=['POST'])
+@login_required
+def assign_members():
+    assigned_count = 0
+
+    for item in request.form.iteritems():
+        archer_id, gender = item
+
+        if 'csrf_token' in archer_id:
+            continue
+
+        archer = NewArchers.query.filter(NewArchers.card_number == unicode(archer_id, 'utf-8')).first()
+
+        if not archer:
+            continue
+
+        assigned = Archers(archer.first_name, archer.last_name, gender, archer.email, archer.card_number, None)
+
+        db.session.add(assigned)
+        db.session.delete(archer)
+
+        assigned_count += 1
+
+    db.session.commit()
+
+    if assigned_count > 0:
+        flash('{num} gender{s} entered successfully'.format(num=assigned_count, s='s' if assigned_count > 1 else ''),
+              'submission')
+
+    return redirect(url_for('.import_members'))
 
 
 @mod_admin.route('/login', methods=['GET'])

@@ -68,6 +68,44 @@ def approve_scores():
     return render_template('admin/scores-approve.html', scores=scores)
 
 
+@mod_admin.route('/scores/queued/update', methods=['POST'])
+@login_required
+def update_score_status():
+    updated_count = 0
+
+    for item in request.form.iteritems():
+        score_id, status = item
+
+        if 'csrf_token' in score_id:
+            continue
+
+        score = QueuedScores.query.get(score_id)
+
+        if not score:
+            continue
+
+        if 'A' in status:
+            db.session.add(Scores(score.archer_id, score.round_id, score.event_id, score.bow_type, score.category,
+                                  score.score, score.num_hits, score.num_golds, score.num_xs, score.date))
+            db.session.delete(score)
+
+            updated_count += 1
+        elif 'R' in status:
+            db.session.delete(score)
+
+            updated_count += 1
+        else:
+            continue
+
+    db.session.commit()
+
+    if updated_count > 0:
+        flash('{num} scores{s} updated successfully'.format(num=updated_count, s='s' if updated_count > 1 else ''),
+              'submission')
+
+    return redirect(url_for('.approve_scores'))
+
+
 @mod_admin.route('/scores/edit', methods=['GET'])
 @login_required
 def edit_scores():

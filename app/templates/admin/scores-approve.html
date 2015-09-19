@@ -7,47 +7,72 @@
 {% block main_content %}
     <div class="row">
         <div class="small-12 columns">
+            {% with messages = get_flashed_messages(category_filter=['submission']) %}
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div data-alert class="alert-box success radius">
+                            {{ msg }}
+                            <a href="#" class="close">&times;</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% if not scores %}
             <section class="bottom-divider">
+            {% else %}
+                <section>
+            {% endif %}
                 <h4><a href="{{ url_for('admin.dashboard') }}"><i class="fa fa-caret-left"></i> Back to dashboard</a>
                 </h4>
-
                 <h1>Score Queue</h1>
-
                 <p>All scores listed below are awaiting approval or rejection.</p>
             </section>
             <section>
                 {% if not scores %}
                     <h2 class="text-center">There are no scores in the queue right now!</h2>
                 {% else %}
-                    <table class="full-width pad-top">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Round</th>
-                            <th>Score/Hits/Golds/Xs</th>
-                            <th>Category</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for score in scores %}
+                    <form action="{{ url_for('admin.update_score_status') }}" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                        <table class="full-width pad-top">
+                            <thead>
                             <tr>
-                                <td>{{ score.archer.get_name() }}</td>
-                                <td>{{ score.round.name }}</td>
-                                <td>{{ "{score}/{hits}/{golds}/{xs}".format(score=score.score, hits=score.num_hits,
-                                                                        golds=score.num_golds, xs=(score.xs or 0)) }}</td>
-                                <td>{{ score.category }}</td>
-                                <td>{{ score.date }}</td>
-                                <td>
-                                    {# TODO: Create JS to approve/reject #}
-                                    <a class="item-action" href="#"><i class="fa fa-check"></i></a>
-                                    <a class="item-action" href="#"><i class="fa fa-trash"></i></a>
-                                </td>
+                                <th>Name</th>
+                                <th>Round</th>
+                                <th>Score/Hits/Golds/Xs</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Accept</th>
+                                <th>Reject</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {% for score in scores %}
+                                <tr>
+                                    <td>{{ score.archer.get_name() }}</td>
+                                    <td>{{ score.round.name }}</td>
+                                    <td>{{ "{score}/{hits}/{golds}/{xs}".format(score=score.score, hits=score.num_hits,
+                                                                            golds=score.num_golds, xs=(score.xs or 0)) }}</td>
+                                    <td>{{ score.category }}</td>
+                                    <td>{{ score.date }}</td>
+                                    <td>
+                                        <input type="radio" name="{{ score.id }}" value="A">
+                                    </td>
+                                    <td>
+                                        <input type="radio" name="{{ score.id }}" value="R">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <h4 class="pull-left"><a href="#main-content"><i class="fa fa-caret-up"></i> Back to top</a>
+                                </h4>
+                                <button class="button radius small pull-right" type="submit">Update</button>
+                            </div>
+                        </div>
+                    </form>
                 {% endif %}
             </section>
         </div>

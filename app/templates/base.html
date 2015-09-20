@@ -22,19 +22,20 @@
     <nav class="top-bar" data-topbar role="navigation">
         <ul class="title-area">
             <li class="name">
-                <h1><a href="#">UWAC</a></h1>
+                <h1><a href="{{ config['SITE_URL'] }}/">UWAC</a></h1>
             </li>
             <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
         </ul>
         <section class="top-bar-section">
             <ul class="left">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">The Club</a></li>
-                <li><a href="#">Exec</a></li>
-                <li><a href="#">Sessions</a></li>
-                <li><a href="#">Competitons</a></li>
-                <li class="active"><a href="/records/">Records</a></li>
-                <li><a href="">Contact Us</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/">Home</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/the-club">The Club</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/exec">Exec</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/sessions">Sessions</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/competition">Competitons</a></li>
+                <li class="{{ 'active' if 'records' in request.path else '' }}"><a href="{{ url_for('site.home') }}">Records</a>
+                </li>
+                <li><a href="{{ config['SITE_URL'] }}/contact-us">Contact Us</a></li>
             </ul>
         </section>
     </nav>

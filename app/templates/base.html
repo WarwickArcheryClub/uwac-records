@@ -49,36 +49,26 @@
         <div class="small-12 large-4 columns">
             <h5>University of Warwick Archery Club</h5>
             <ul class="social-list">
-                <li><a href="#"><span class="fa fa-facebook-square fa-2x"></span></a></li>
-                <li><a href="#"><span class="fa fa-twitter-square fa-2x"></span></a></li>
+                <li><a href="https://www.facebook.com/universityofwarwickarcheryclub"><span
+                        class="fa fa-facebook-square fa-2x"></span></a></li>
+                <li><a href="https://twitter.com/uwacfeed"><span class="fa fa-twitter-square fa-2x"></span></a></li>
+                <li><a href="{{ config['SITE_URL'] }}/rss/"><span class="fa fa-rss-square fa-2x"></span></a></li>
             </ul>
         </div>
         <div class="small-12 large-8 columns">
             <ul class="sitemap-list">
-                <li><a href="#">News</a></li>
-                <li>
-                    <a href="#">The Club</a>
-                    <ul class="no-bullet">
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Achievements</a></li>
-                        <li><a href="#">Exec</a></li>
-                        <li><a href="#">History</a></li>
-                        <li><a href="#">Calendar</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Sessions</a></li>
-                <li>
-                    <a href="#">Competitions</a>
-                    <ul class="no-bullet">
-                        <li><a href="#">W.O.N.T.</a></li>
-                        <li><a href="#">Postal &amp; E-leagues</a></li>
-                        <li><a href="#">Regionals</a></li>
-                        <li><a href="#">Nationals</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Records</a></li>
-                <li><a href="#">Submit Score</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/">Home</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/the-club">The Club</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/exec">Exec</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/sessions">Sessions</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/competitions">Competitions</a></li>
+                <li><a href="{{ url_for('site.home') }}">Records</a></li>
+                <li><a href="{{ config['SITE_URL'] }}/contact">Contact</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('admin.login') }}">Login</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>

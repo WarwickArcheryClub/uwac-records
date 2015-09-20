@@ -3,7 +3,7 @@ from time import strptime, mktime
 from datetime import date
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, current_user
 from flask_mail import Message
 from app.mod_site.controllers import is_integer, is_date, is_category, category_map
 from app.models import Users, QueuedScores, Scores, NewArchers, Archers, BowTypes, Rounds, Events
@@ -11,10 +11,6 @@ from app import app, db, mail
 from genderize import Genderize
 import requests
 import bcrypt
-
-
-
-
 
 
 # Use the C ElementTree implementation where possible
@@ -380,6 +376,9 @@ def update_members():
 
 @mod_admin.route('/login', methods=['GET'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('.dashboard'))
+
     return render_template('admin/login.html')
 
 
@@ -394,8 +393,6 @@ def authenticate():
         flash('Please fill in all fields', 'error')
         return redirect(url_for('.login'))
 
-    print request.form.__repr__()
-
     user = Users.query.filter(Users.name == request.form['username']).first()
 
     if user is None:
@@ -409,6 +406,7 @@ def authenticate():
             remember = False
 
         login_user(user, remember=remember)
+
         return redirect(url_for('.dashboard'))
     else:
         flash('Invalid username or password', 'error')

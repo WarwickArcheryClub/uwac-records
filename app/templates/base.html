@@ -46,7 +46,7 @@
 
 <footer class="footer">
     <div class="row">
-        <div class="small-12 large-4 columns">
+        <div class="small-12 large-3 columns">
             <h5>University of Warwick Archery Club</h5>
             <ul class="social-list">
                 <li><a href="https://www.facebook.com/universityofwarwickarcheryclub"><span
@@ -55,7 +55,7 @@
                 <li><a href="{{ config['SITE_URL'] }}/rss/"><span class="fa fa-rss-square fa-2x"></span></a></li>
             </ul>
         </div>
-        <div class="small-12 large-8 columns">
+        <div class="small-12 large-9 columns">
             <ul class="sitemap-list">
                 <li><a href="{{ config['SITE_URL'] }}/">Home</a></li>
                 <li><a href="{{ config['SITE_URL'] }}/the-club">The Club</a></li>
@@ -65,6 +65,7 @@
                 <li><a href="{{ url_for('site.home') }}">Records</a></li>
                 <li><a href="{{ config['SITE_URL'] }}/contact">Contact</a></li>
                 {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('admin.dashboard') }}">Admin</a></li>
                     <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
                 {% else %}
                     <li><a href="{{ url_for('admin.login') }}">Login</a></li>

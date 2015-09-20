@@ -7,7 +7,41 @@
 {% block main_content %}
     <div class="row">
         <div class="small-12 columns">
+            <section class="bottom-divider">
+                <h4>
+                    <a href="{{ url_for('admin.dashboard') }}"><i class="fa fa-caret-left"></i> Back to dashboard</a>
+                </h4>
 
+                <h1>Export Scores</h1>
+
+                <p>Export all approved scores shot on and between the dates chosen as a CSV. Default is 1 month ago from
+                    today.</p>
+            </section>
+            <section class="padding-top">
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>
+                            From
+                            <input class="radius" type="date" id="date-from-input">
+                        </label>
+                    </div>
+                    <div class="small-12 medium-6 columns">
+                        <label>
+                            To
+                            <input class="radius" type="date" id="date-to-input">
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <a href="#" class="button radius small pull-right" id="export" target="_blank">Export</a>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/preserve.js') }}"></script>
 {% endblock %}

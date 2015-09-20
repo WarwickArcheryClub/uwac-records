@@ -1,7 +1,10 @@
 import json
+from datetime import date
 
 from flask import Blueprint, request, Response, abort
-from app.models import Rounds, Events, Archers
+from app import db
+from app.models import Rounds, Events, Archers, Scores
+from app.mod_site.controllers import condense_category
 import Levenshtein as Lev
 
 mod_api = Blueprint('api', __name__, url_prefix='/api')
@@ -76,6 +79,35 @@ def events_suggestions():
                                                                                                              query))}))
     response.headers["Content-Type"] = 'application/json'
     return response
+
+
+@mod_api.route('/scores/from/<date:start_date>/to/<date:end_date>', methods=['GET'])
+def export_scores_csv(start_date, end_date):
+    scores = Scores.query.filter(Scores.date.between(start_date, end_date)).order_by(db.asc(Scores.date)).all()
+
+    response = Response('{csv_head}\n{csv_body}'.format(csv_head=csv_head(),
+                                                        csv_body=''.join(map(score_to_csv, scores))))
+
+    response.headers['Content-Type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'inline; filename=scores-{start}-to-{end}.csv'.format(start=start_date,
+                                                                                                    end=end_date)
+
+    return response
+
+
+def csv_head():
+    return 'Name,Category,Bow Type,Round,Date,Event,Score,Hits,Gold,Xs,'
+
+
+def score_to_csv(score):
+    return '{name_csv},{cat_csv},{bow_csv},{round_csv},{date_csv},{event_csv},{score_csv},{hits_csv},' \
+           '{golds_csv},{xs_csv},\n'.format(name_csv=score.archer.get_name(),
+                                            cat_csv=condense_category(score.archer.gender, score.category),
+                                            bow_csv=score.bow.name,
+                                            round_csv=score.round.name, date_csv=date.strftime(score.date, '%d/%m/%Y'),
+                                            event_csv=score.event.name,
+                                            score_csv=score.score, hits_csv=score.num_hits, golds_csv=score.num_golds,
+                                            xs_csv=score.num_xs or '')
 
 
 class SuggestionUtils:

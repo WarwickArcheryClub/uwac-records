@@ -65,11 +65,9 @@
                 <li><a href="{{ config['SITE_URL'] }}/competitions">Competitions</a></li>
                 <li><a href="{{ url_for('site.home') }}">Records</a></li>
                 <li><a href="{{ config['SITE_URL'] }}/contact">Contact</a></li>
+                <li><a href="{{ url_for('admin.dashboard') }}">Admin</a></li>
                 {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('admin.dashboard') }}">Admin</a></li>
                     <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('admin.login') }}">Login</a></li>
                 {% endif %}
             </ul>
         </div>

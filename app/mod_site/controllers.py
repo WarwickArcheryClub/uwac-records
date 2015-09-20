@@ -174,8 +174,8 @@ def send_email(score):
                '{round} on {date} as {category}<br/>' \
                'Score: {score}, hits: {hits}, golds: {golds}, Xs: {xs}<br/><br/>' \
                'CSV format:<br/>' \
-               '<pre>{name_csv};{cat_csv};{bow_csv};{round_csv};{date_csv};{event_csv};{score_csv};{hits_csv};' \
-               '{golds_csv};{xs_csv};</pre><br/>' \
+               '<pre>{name_csv},{cat_csv},{bow_csv},{round_csv},{date_csv},{event_csv},{score_csv},{hits_csv},' \
+               '{golds_csv},{xs_csv},</pre><br/>' \
                'To approve the score click <a href="{approve}">here</a> or to reject click ' \
                '<a href="{reject}">this link</a><br/><br/>' \
                'This email was automatically generated, please don\'t reply.' \
@@ -185,9 +185,8 @@ def send_email(score):
                 cat_csv=condense_category(score.archer.gender, score.category), bow_csv=score.bow.name,
                 round_csv=score.round.name, date_csv=date.strftime(score.date, '%d/%m/%Y'), event_csv=score.event.name,
                 score_csv=score.score, hits_csv=score.num_hits, golds_csv=score.num_golds, xs_csv=score.num_xs or '',
-                approve=app.config['SITE_URL'] + mod_site.url_prefix + url_for('admin.approve_score',
-                                                                               score_id=score.id),
-                reject=app.config['SITE_URL'] + mod_site.url_prefix + url_for('admin.reject_score', score_id=score.id))
+                approve=app.config['SITE_URL'] + url_for('admin.approve_score', score_id=score.id),
+                reject=app.config['SITE_URL'] + url_for('admin.reject_score', score_id=score.id))
 
     thread = Thread(target=send_async_email, args=[msg])
     thread.start()
@@ -199,7 +198,6 @@ def send_async_email(msg):
 
 
 def condense_category(gender, experience):
-    print '{} {}'.format(gender, experience)
     if experience in 'Experienced':
         if gender in 'M':
             return 'ME'

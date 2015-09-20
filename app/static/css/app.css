@@ -8809,6 +8809,10 @@ table.full-width input[type="radio"] {
     margin: 0
 }
 
+.padding-top {
+    padding-top: 15px
+}
+
 a.admin-action {
     margin: 0px 5px
 }

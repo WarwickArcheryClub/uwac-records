@@ -4,7 +4,7 @@ from datetime import date
 from threading import Thread
 
 import Levenshtein as lev
-from flask import Blueprint, render_template, request, Response, redirect, flash, url_for
+from flask import Blueprint, render_template, request, redirect, flash, url_for, abort
 from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classifications, Rounds, Events, QueuedScores
 from app import mail, app
 from flask_mail import Message
@@ -223,12 +223,12 @@ def search():
     if request.form['search_data']:
         data = json.loads(request.form['search_data'])
         if not data['data']:
-            return Response(400)
+            return abort(400)
         else:
             s_type = data['data']['s_type']
             s_id = data['data']['id']
             if not s_type or not s_id:
-                return Response(400)
+                return abort(400)
             else:
                 return redirect('/records/{}/{}'.format(s_type, s_id))
     else:
@@ -256,11 +256,7 @@ def search():
 
 @mod_site.route('/event/<int:event_id>')
 def event_by_id(event_id):
-    if not db.session.query(db.exists().where(Events.id == event_id)).scalar():
-        # TODO: State round not found or something.
-        return Response(404)
-
-    event = Events.query.get(event_id)
+    event = Events.query.get_or_404(event_id)
     categories_shot = db.session.query(Scores.date.distinct().label('date')).filter(
         Scores.event_id == event_id).order_by(db.desc(Scores.date)).all()
     categories = []
@@ -277,11 +273,7 @@ def event_by_id(event_id):
 
 @mod_site.route('/event/<int:event_id>/<date:event_date>')
 def event_by_id_date(event_id, event_date):
-    if not db.session.query(db.exists().where(Events.id == event_id)).scalar():
-        # TODO: State round not found or something.
-        return Response(404)
-
-    event = Events.query.get(event_id)
+    event = Events.query.get_or_404(event_id)
     categories_shot = db.session.query(Scores.round_id.distinct().label('round_id'), Scores.bow_type.label('bow_type'),
                                        (Rounds.name + ' ' + BowTypes.name).label('div_name')).join(Scores.round).join(
         Scores.bow).filter(Scores.event_id == event_id).filter(Scores.date == event_date).order_by(
@@ -315,11 +307,7 @@ def event_by_id_date(event_id, event_date):
 
 @mod_site.route('/round/<int:round_id>')
 def round_by_id(round_id):
-    if not db.session.query(db.exists().where(Rounds.id == round_id)).scalar():
-        # TODO: State round not found or something.
-        return Response(404)
-
-    round = Rounds.query.get(round_id)
+    score_round = Rounds.query.get_or_404(round_id)
     categories_shot = db.session.query(Scores.bow_type.distinct().label('bow_type'), Archers.gender.label('gender'),
                                        (Archers.gender + ' ' + BowTypes.name).label('div_name')).filter(
         Scores.round_id == round_id).join(Scores.archer).join(Scores.bow).order_by(db.desc(Scores.bow_type)).order_by(
@@ -332,7 +320,7 @@ def round_by_id(round_id):
             'scores': Scores.query.filter(Scores.round_id == round_id).filter(Scores.bow_type == cat.bow_type).filter(
                 Archers.gender == cat.gender).join(Scores.archer).order_by(db.desc(Scores.score)).order_by(
                 db.desc(Scores.num_hits)).order_by(db.desc(Scores.num_golds)).order_by(db.desc(Scores.num_xs)).all(),
-            'max_score': round.max_score
+            'max_score': score_round.max_score
         }
 
         for score in category['scores']:
@@ -349,11 +337,7 @@ def round_by_id(round_id):
 
 @mod_site.route('/archer/<int:archer_id>')
 def archer_by_id(archer_id):
-    if not db.session.query(db.exists().where(Archers.id == archer_id)).scalar():
-        # TODO: State archer not found or something.
-        return Response(404)
-
-    archer = Archers.query.get(archer_id)
+    archer = Archers.query.get_or_404(archer_id)
     categories_shot = db.session.query(Scores.round_id.distinct().label('round_id'), Scores.bow_type.label('bow_type'),
                                        (Rounds.name + u' ' + BowTypes.name).label('div_name')).filter(
         Scores.archer_id == archer_id).join(Scores.bow).join(Scores.round).order_by('div_name').all()

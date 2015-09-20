@@ -14,6 +14,9 @@ import bcrypt
 
 
 
+
+
+
 # Use the C ElementTree implementation where possible
 try:
     from xml.etree.cElementTree import ElementTree, fromstring
@@ -109,7 +112,7 @@ def update_score_status():
     return redirect(url_for('.approve_scores'))
 
 
-@mod_admin.route('/scores/edit/<int:score_id>', methods=['GET'])
+@mod_admin.route('/score/<int:score_id>/edit', methods=['GET'])
 @login_required
 def edit_score(score_id):
     score = Scores.query.get(score_id)
@@ -125,7 +128,7 @@ def edit_score(score_id):
     return render_template('admin/score-edit.html', score=score, next=next_url, bow_types=BowTypes.query.all())
 
 
-@mod_admin.route('/scores/update', methods=['POST'])
+@mod_admin.route('/score/update', methods=['POST'])
 @login_required
 def update_score():
     print request.form.__repr__()
@@ -251,7 +254,7 @@ def update_score():
         return redirect(url_for('.dashboard'))
 
 
-@mod_admin.route('/scores/delete/<int:score_id>', methods=['GET'])
+@mod_admin.route('/score/<int:score_id>/delete', methods=['GET'])
 @login_required
 def delete_score(score_id):
     score = Scores.query.get(score_id)
@@ -343,9 +346,9 @@ def import_members():
     return render_template('admin/members-import.html', archers=need_assignment)
 
 
-@mod_admin.route('/members/import/assign', methods=['POST'])
+@mod_admin.route('/members/import/update', methods=['POST'])
 @login_required
-def assign_members():
+def update_members():
     assigned_count = 0
 
     for item in request.form.iteritems():
@@ -391,6 +394,8 @@ def authenticate():
         flash('Please fill in all fields', 'error')
         return redirect(url_for('.login'))
 
+    print request.form.__repr__()
+
     user = Users.query.filter(Users.name == request.form['username']).first()
 
     if user is None:
@@ -398,7 +403,12 @@ def authenticate():
         return redirect(url_for('.login'))
 
     if bcrypt.hashpw(request.form['password'].encode(), user.password) == user.password:
-        login_user(user)
+        try:
+            remember = True if request.form['remember-me'] == '1' else False
+        except KeyError:
+            remember = False
+
+        login_user(user, remember=remember)
         return redirect(url_for('.dashboard'))
     else:
         flash('Invalid username or password', 'error')

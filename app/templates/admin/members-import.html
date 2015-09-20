@@ -38,7 +38,7 @@
                 {% if not archers %}
                     <h2 class="text-center">No archers need manual entry, yay!</h2>
                 {% else %}
-                    <form action="{{ url_for('admin.assign_members') }}" method="post">
+                    <form action="{{ url_for('admin.update_members') }}" method="post">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
                         <table class="full-width pad-top">

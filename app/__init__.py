@@ -20,10 +20,10 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 
 # Register custom Jinja2 filters
-from app.mod_site.filters import strip_spaces
+from app.mod_site.filters import id_escape
 from app.mod_site.filters import expand_gender
 
-app.jinja_env.filters['strip_spaces'] = strip_spaces
+app.jinja_env.filters['strip_spaces'] = id_escape
 app.jinja_env.filters['expand_gender'] = expand_gender
 
 # Register custom URL converters

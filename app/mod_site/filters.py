@@ -1,11 +1,11 @@
 # Basic filter to strip all whitespace from a string
-def strip_spaces(str):
-    return "".join(str.split())
+def id_escape(string):
+    return ''.join(''.join(string.split('/')).split())
 
 
 # Filter that replaces all 'M' with 'Gents' and 'F' with 'Ladies'
-def expand_gender(str):
-    if str[0] == 'M':
-        return 'Gents' + str[1:]
+def expand_gender(string):
+    if string[0] == 'M':
+        return 'Gents' + string[1:]
     else:
-        return 'Ladies' + str[1:]
+        return 'Ladies' + string[1:]

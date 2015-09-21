@@ -14,7 +14,8 @@
                 <ul>
                     {% for category in categories %}
                         <li>
-                            <a href="#{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | expand_gender }}</a>
+                            <a class="category-link"
+                               href="#{{ category['div_name'] | lower | strip_spaces }}">{{ category['div_name'] | expand_gender }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -24,7 +25,7 @@
             </section>
             {% for category in categories %}
                 <section>
-                    <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] | expand_gender | title }}</h3>
+                    <h3 id="{{ category['div_name'] | lower | strip_spaces }}">{{ category['div_name'] | expand_gender | title }}</h3>
                     <table class="full-width sortable">
                         <thead>
                         <tr>
@@ -66,7 +67,8 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    <p class="text-right"><a href="#top"><i class="fa fa-chevron-up"></i> Back to the top</a></p>
+                    <p class="text-right"><a class="category-link" href="#top"><i class="fa fa-chevron-up"></i> Back to
+                        the top</a></p>
                 </section>
             {% endfor %}
         </div>
@@ -83,4 +85,5 @@
     <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/sort-tables.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chutney.js') }}"></script>
 {% endblock %}

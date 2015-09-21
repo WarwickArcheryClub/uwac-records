@@ -2,10 +2,6 @@
 
 {% block title %}Records Search - University of Warwick Archery Club{% endblock %}
 
-{% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/responsive-tables.css') }}"/>
-{% endblock %}
-
 {% block main_content %}
     {% include "site/search-form.html" %}
     <div class="row">
@@ -21,7 +17,7 @@
                         <div class="row">
                             <div class="small-12 columns">
                                 <h3 class="bottom-divider">{{ category['name'] }}</h3>
-                                <table class="responsive full-width">
+                                <table class="full-width">
                                     <thead>
                                     <tr>
                                         <th>Name</th>
@@ -52,7 +48,7 @@
                         <div class="row">
                             <div class="small-12 columns">
                                 <h3 class="bottom-divider">{{ category['name'] }}</h3>
-                                <table class="responsive full-width">
+                                <table class="full-width">
                                     <thead>
                                     <tr>
                                         <th>Name</th>
@@ -90,5 +86,4 @@
     <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
 {% endblock %}

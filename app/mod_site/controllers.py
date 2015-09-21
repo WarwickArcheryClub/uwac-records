@@ -330,7 +330,7 @@ def round_by_id(round_id):
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
 
-    return render_template('site/round.html', round=round, categories=categories, bow_types=bow_types)
+    return render_template('site/round.html', score_round=score_round, categories=categories, bow_types=bow_types)
 
 
 @mod_site.route('/archer/<int:archer_id>')

@@ -4,10 +4,6 @@
     {{ archer.get_name() + ' - University of Warwick Archery Club' }}
 {% endblock %}
 
-{% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/responsive-tables.css') }}"/>
-{% endblock %}
-
 {% block main_content %}
     {% include "site/search-form.html" %}
     <div class="row">
@@ -29,7 +25,7 @@
                     <a href="/records/round/{{ category["round_id"] }}">
                         <h3 id="{{ category['div_name'] | lower | strip_spaces | urlencode }}">{{ category['div_name'] }}</h3>
                     </a>
-                    <table class="responsive full-width sortable">
+                    <table class="full-width sortable">
                         <thead>
                         <tr>
                             <th class="{sorter: 'scores'} sort-header sort-ascending">Score</th>
@@ -82,7 +78,6 @@
         var class_column = 5;
         var csrftoken = "{{ csrf_token() }}"
     </script>
-    <script src="{{ url_for('static', filename='js/responsive-tables.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>

@@ -15,8 +15,6 @@ import bcrypt
 
 
 
-
-
 # Use the C ElementTree implementation where possible
 try:
     from xml.etree.cElementTree import ElementTree, fromstring
@@ -50,6 +48,11 @@ def approve_score(score_id):
 
         flash('Score approved successfully', 'score')
         return redirect(url_for('.dashboard'))
+
+
+@mod_admin.route('/score/add', methods=['GET'])
+def add_score():
+    return render_template('admin/score-add.html', bow_types=BowTypes.query.order_by(db.desc(BowTypes.id)).all())
 
 
 @mod_admin.route('/score/<int:score_id>/reject', methods=['GET'])
@@ -131,8 +134,6 @@ def edit_score(score_id):
 @mod_admin.route('/score/update', methods=['POST'])
 @login_required
 def update_score():
-    print request.form.__repr__()
-
     try:
         if not request.form['bow-select'] or \
                 not request.form['archer-select'] or \
@@ -227,31 +228,49 @@ def update_score():
     category = category_map(request.form['category-select'])
     score_date = date.fromtimestamp(mktime(strptime(request.form['date-input'], '%Y-%m-%d')))
 
-    old_score = Scores.query.get(int(request.form['score-id']))
+    try:
+        new_score = 'new' in request.form['score-status']
+    except KeyError:
+        new_score = False
 
-    if not old_score:
-        flash('Original score doesn\'t exist', 'submission')
-        return redirect(request.form['origin'])
+    print new_score
 
-    old_score.archer_id = archer.id
-    old_score.round_id = score_round.id
-    old_score.event_id = event.id
-    old_score.bow_type = bow_type.id
-    old_score.category = category
-    old_score.score = score
-    old_score.num_hits = hits
-    old_score.num_golds = golds
-    old_score.num_xs = xs
-    old_score.date = score_date
+    if new_score:
+        score_obj = Scores(archer.id, score_round.id, event.id, bow_type.id, category, score, hits, golds, xs,
+                           score_date)
+
+        db.session.add(score_obj)
+
+        flash('Added new score successfully', 'submission')
+    else:
+        old_score = Scores.query.get(int(request.form['score-id']))
+
+        if not old_score:
+            flash('Original score doesn\'t exist', 'submission')
+            return redirect(request.form['origin'])
+
+        old_score.archer_id = archer.id
+        old_score.round_id = score_round.id
+        old_score.event_id = event.id
+        old_score.bow_type = bow_type.id
+        old_score.category = category
+        old_score.score = score
+        old_score.num_hits = hits
+        old_score.num_golds = golds
+        old_score.num_xs = xs
+        old_score.date = score_date
+
+        flash('Updated score successfully', 'submission')
 
     db.session.commit()
 
-    flash('Updated score successfully', 'submission')
-
-    try:
-        return redirect(request.form['origin'])
-    except KeyError:
-        return redirect(url_for('.dashboard'))
+    if new_score:
+        return redirect(url_for('admin.add_score'))
+    else:
+        try:
+            return redirect(request.form['origin'])
+        except KeyError:
+            return redirect(url_for('.dashboard'))
 
 
 @mod_admin.route('/score/<int:score_id>/delete', methods=['GET'])

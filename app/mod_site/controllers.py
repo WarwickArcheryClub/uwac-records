@@ -391,7 +391,7 @@ def is_date(value):
 
 
 def category_map(value):
-    if value is u'N':
+    if 'N' in value:
         return u'Novice'
     else:
         return u'Experienced'

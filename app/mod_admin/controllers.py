@@ -233,8 +233,6 @@ def update_score():
     except KeyError:
         new_score = False
 
-    print new_score
-
     if new_score:
         score_obj = Scores(archer.id, score_round.id, event.id, bow_type.id, category, score, hits, golds, xs,
                            score_date)

@@ -166,7 +166,7 @@
                             </div>
                             <div class="small-9 columns">
                                 <input type="number" name="score-xs" id="score-xs" value="{{ score.xs or '0' }}" min="0"
-                                       disabled="{{ 'true' if 'Indoors' in score.round.r_type else 'false' }}">
+                                       {{ 'disabled="true"' if 'Indoors' in score.round.r_type else '' }}>
                             </div>
                         </div>
                     </div>

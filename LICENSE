@@ -1,26 +1,3 @@
-UWAC Records System
-===
-
-### How to use
-
-* Set up a virtualenv using pip's `virtualenv` package,
-* Install postgresql and set it up,
-* Run `pip install -r requirements.txt`,
-* Configure using `config.sample.py` as a base, setting database URIs and secret keys,
-* Run `run.py`
-
-You should now have a working system running on 0.0.0.0:5000!
-
-### Dependencies
-
-* Postgresql
-* Python 2.7+
-
-### License
-
-This repository is covered by an MIT license.
-
-```
 The MIT License (MIT)
 
 Copyright (c) 2015 David Richardson
@@ -42,4 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-```

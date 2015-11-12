@@ -1,8 +1,7 @@
 import json
 from time import strptime, mktime
-from datetime import date
+from datetime import date, datetime
 from threading import Thread
-
 import Levenshtein as lev
 from flask import Blueprint, render_template, request, redirect, flash, url_for, abort
 from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classifications, Rounds, Events, QueuedScores
@@ -167,11 +166,9 @@ def submit():
 
 def send_email(score):
     msg = Message(
-            'New score submitted by {name} for date {date}: {score} on a {round}'.format(name=score.archer.get_name(), 
-                                                                                         date=date.strftime(score.date, 
-                                                                                                            '%d/%m/%Y'), 
-                                                                                         score=score.score, 
-                                                                                         round=score.round.name),
+        'New score submitted by {name} at {datetime} for a {round} on {date}: {score}'.format(
+            name=score.archer.get_name(), date=date.strftime(score.date, '%d/%m/%Y'), score=score.score,
+            round=score.round.name, datetime=datetime.strftime(datetime.now(), '%d/%m/%Y %H:%M:%S')),
         recipients=app.config['MAIL_RECORDS']
     )
     msg.html = '{name} has submitted a score:<br/><br/>' \

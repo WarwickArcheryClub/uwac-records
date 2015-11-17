@@ -21,16 +21,25 @@ def home():
     categories = []
 
     for cat in categories_shot:
+        scores = []
+
+        if cat.bow_type == 'Compound':
+            rounds = ['Portsmouth', 'WA 18m', 'WA 50m', 'WA 1440 Gents', 'WA 1440 Ladies']
+        else:
+            rounds = ['Portsmouth', 'WA 18m', 'WA 70m', 'WA 1440 Gents', 'WA 1440 Ladies']
+
+        for round_name in rounds:
+            scores.append({
+                'round': round_name,
+                'scores': IndividualRecords.query.filter(IndividualRecords.round_name == round_name).filter(
+                    IndividualRecords.bow_type == cat.bow_type).order_by(db.desc(IndividualRecords.category),
+                                                                         db.desc(IndividualRecords.score),
+                                                                         db.desc(IndividualRecords.num_golds)).all()
+            })
+
         category = {
             'name': cat.bow_type,
-            'scores': IndividualRecords.query.filter(
-                db.or_(IndividualRecords.round_name == 'Portsmouth', IndividualRecords.round_name == 'WA 18m',
-                       IndividualRecords.round_name == 'WA 50m', IndividualRecords.round_name == 'WA 70m',
-                       IndividualRecords.round_name.like('WA 1440%'))).filter(
-                IndividualRecords.bow_type == cat.bow_type).order_by(IndividualRecords.round_name,
-                                                                     db.desc(IndividualRecords.category),
-                                                                     db.desc(IndividualRecords.score),
-                                                                     db.desc(IndividualRecords.num_golds)).all()
+            'scores': scores
         }
 
         categories.append(category)

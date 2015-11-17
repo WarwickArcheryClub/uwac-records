@@ -6,13 +6,45 @@
     {% include "site/search-form.html" %}
     <div class="row">
         <div class="small-12 columns">
-            <h1>Significant club records</h1>
+            <h1>Club records</h1>
+            <h4>Jump to:</h4>
+            <ul>
+                {% for category in categories %}
+                    <li>
+                        <a class="category-link"
+                           href="#{{ category.name | lower | strip_spaces }}">{{ category.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
             {% for category in categories %}
                 <section>
-                    <h3>{{ category.name }}</h3>
+                    <h3 id="{{ category.name | lower | strip_spaces }}">{{ category.name }}</h3>
+                    {% for scores in category.scores %}
+                        {% if scores.scores %}
                     <table class="full-width">
-
+                        <h5 id="{{ category.name | lower | strip_spaces }}{{ scores.round | lower | strip_spaces }}">{{ scores.round }}</h5>
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Score/Golds</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for score in scores.scores %}
+                        <tr>
+                            <td>{{ score.archer_name }}</td>
+                            <td>{{ "{}/{}".format(score.score, (score.num_golds if score.num_golds else 0)) }}</td>
+                            <td>{{ "{} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies")) }}</td>
+                            <td>{{ score.date }}</td>
+                         </tr>
+                        {% endfor %}
+                        </tbody>
                     </table>
+                        {% endif %}
+                    {% endfor %}
                 </section>
             {% endfor %}
 

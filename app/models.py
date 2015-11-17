@@ -40,7 +40,7 @@ class Scores(db.Model):
     round_id = db.Column(db.Integer, db.ForeignKey('rounds.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     bow_type = db.Column(db.Integer, db.ForeignKey('bow_types.id'), nullable=False)
-    category = db.Column(db.Enum('Novice', 'Experienced', name='CATEGORY'), nullable=False)
+    category = db.Column(db.Enum('Novice', 'Experienced', name='category'), nullable=False)
     score = db.Column(db.Integer, nullable=False)
     num_hits = db.Column(db.Integer, nullable=False)
     num_golds = db.Column(db.Integer, nullable=False)
@@ -76,7 +76,7 @@ class QueuedScores(db.Model):
     round_id = db.Column(db.Integer, db.ForeignKey('rounds.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     bow_type = db.Column(db.Integer, db.ForeignKey('bow_types.id'), nullable=False)
-    category = db.Column(db.Enum('Novice', 'Experienced', name='CATEGORY'), nullable=False)
+    category = db.Column(db.Enum('Novice', 'Experienced', name='category'), nullable=False)
     score = db.Column(db.Integer, nullable=False)
     num_hits = db.Column(db.Integer, nullable=False)
     num_golds = db.Column(db.Integer, nullable=False)
@@ -112,10 +112,10 @@ class IndividualRecords(db.Model):
     round_name = db.Column(db.Unicode(255), primary_key=True)
     num_golds = db.Column(db.Integer, primary_key=True)
     round_type = db.Column(db.Enum('Imperial', 'Metric', 'WA Outdoors', 'WA Indoors', 'Clout', 'Indoors',
-                                   name='ROUND_TYPE'), primary_key=True)
+                                   'Hit-Miss', name='round_type'), primary_key=True)
     bow_type = db.Column(db.Unicode(255), primary_key=True)
-    gender = db.Column(db.Enum('F', 'M', name='GENDER'), primary_key=True)
-    category = db.Column(db.Enum('Novice', 'Experienced', name='CATEGORY'), primary_key=True)
+    gender = db.Column(db.Enum('F', 'M', name='gender'), primary_key=True)
+    category = db.Column(db.Enum('Novice', 'Experienced', name='category'), primary_key=True)
     date = db.Column(db.Date, primary_key=False)
 
     def __init__(self, archer_name, score, round_name, num_golds, round_type, bow_type, gender, category, date):
@@ -133,7 +133,7 @@ class IndividualRecords(db.Model):
 class Classifications(db.Model):
     round_id = db.Column(db.Integer, db.ForeignKey('rounds.id'), primary_key=True)
     bow_type = db.Column(db.Integer, db.ForeignKey('bow_types.id'), primary_key=True)
-    gender = db.Column(db.Enum('F', 'M', name='GENDER'), primary_key=True)
+    gender = db.Column(db.Enum('F', 'M', name='gender'), primary_key=True)
     class_a = db.Column(db.Integer, nullable=True)
     class_b = db.Column(db.Integer, nullable=True)
     class_c = db.Column(db.Integer, nullable=True)
@@ -237,10 +237,10 @@ class Rounds(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode(255), nullable=False)
     r_type = db.Column('type', db.Enum('Imperial', 'Metric', 'WA Outdoors', 'WA Indoors', 'Clout', 'Indoors',
-                                       name='ROUND_TYPE'), nullable=False)
+                                       'Hit-Miss', name='round_type'), nullable=False)
     max_hits = db.Column(db.Integer, nullable=False)
     max_score = db.Column(db.Integer, nullable=False)
-    scoring_zones = db.Column(db.Enum('5', '10', name='SCORING_ZONES'), nullable=False)
+    scoring_zones = db.Column(db.Enum('5', '10', '1', name='scoring_zones'), nullable=False)
 
     def __init__(self, name, r_type, max_hits, max_score, scoring_zones):
         self.name = name
@@ -263,7 +263,7 @@ class Archers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.Unicode(255), nullable=False)
     last_name = db.Column(db.Unicode(255), nullable=False)
-    gender = db.Column(db.Enum('F', 'M', name='GENDER'), nullable=False)
+    gender = db.Column(db.Enum('F', 'M', name='gender'), nullable=False)
     email = db.Column(db.Unicode(255), nullable=True)
     card_number = db.Column(db.Unicode(7), nullable=True)
     agb_card = db.Column(db.Unicode(10), nullable=True)

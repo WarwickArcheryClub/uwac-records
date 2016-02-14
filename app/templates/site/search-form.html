@@ -92,9 +92,11 @@
                             <span class="prefix">Event</span>
                         </div>
                         <div class="small-10 medium-9 columns">
-                            <select id="event-select" name="event-select" class="select2"
-                                    data-placeholder="Select an event" data-width="100%"
-                                    data-ajax--url="/api/suggestions/events"></select>
+                            <select name="event-select" id="event-select">
+                                {% for event in event_list %}
+                                    <option value="{{ event.id }}">{{ event.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                 </div>

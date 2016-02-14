@@ -47,7 +47,7 @@ def home():
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
     events = Events.query.all()
 
-    return render_template('site/search.html', events=events, bow_types=bow_types, categories=categories)
+    return render_template('site/search.html', event_list=events, bow_types=bow_types, categories=categories)
 
 
 @mod_site.route('/submit', methods=['POST'])
@@ -241,9 +241,10 @@ def search():
                                                                                                query.lower()))
 
         bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+        event_list = Events.query.all()
 
-        return render_template('site/search-clarify.html', query=query, archers=archers, rounds=rounds, events=events,
-                               bow_types=bow_types)
+        return render_template('site/search-clarify.html', event_list=event_list, query=query, archers=archers,
+                               rounds=rounds, events=events, bow_types=bow_types)
 
 
 @mod_site.route('/event/<int:event_id>')
@@ -259,15 +260,17 @@ def event_by_id(event_id):
         categories.append(category)
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+    events = Events.query.all()
 
-    return render_template('site/event.html', event=event, categories=categories, bow_types=bow_types)
+    return render_template('site/event.html', event_list=events, event=event, categories=categories,
+                           bow_types=bow_types)
 
 
 @mod_site.route('/event/<int:event_id>/<date:event_date>')
 def event_by_id_date(event_id, event_date):
     event = Events.query.get_or_404(event_id)
     categories_shot = db.session.query(Scores.round_id.distinct().label('round_id'), Scores.bow_type.label('bow_type'),
-                                       (Rounds.name + ' ' + BowTypes.name).label('div_name')).join(Scores.round).join(
+                                       (Rounds.name + u' ' + BowTypes.name).label('div_name')).join(Scores.round).join(
         Scores.bow).filter(Scores.event_id == event_id).filter(Scores.date == event_date).order_by(
         db.desc(Scores.bow_type)).all()
     categories = []
@@ -292,9 +295,10 @@ def event_by_id_date(event_id, event_date):
         categories.append(category)
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+    events = Events.query.all()
 
-    return render_template('site/event-detail.html', event=event, date=event_date.strftime('%Y-%m-%d'),
-                           categories=categories, bow_types=bow_types)
+    return render_template('site/event-detail.html', event_list=events, event=event,
+                           date=event_date.strftime('%Y-%m-%d'), categories=categories, bow_types=bow_types)
 
 
 @mod_site.route('/round/<int:round_id>')
@@ -323,8 +327,10 @@ def round_by_id(round_id):
         categories.append(category)
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+    events = Events.query.all()
 
-    return render_template('site/round.html', score_round=score_round, categories=categories, bow_types=bow_types)
+    return render_template('site/round.html', event_list=events, score_round=score_round, categories=categories,
+                           bow_types=bow_types)
 
 
 @mod_site.route('/archer/<int:archer_id>')
@@ -353,8 +359,10 @@ def archer_by_id(archer_id):
         categories.append(category)
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+    events = Events.query.all()
 
-    return render_template('site/archer.html', archer=archer, categories=categories, bow_types=bow_types)
+    return render_template('site/archer.html', event_list=events, archer=archer, categories=categories,
+                           bow_types=bow_types)
 
 
 @mod_site.route('/all')
@@ -398,9 +406,10 @@ def all_records():
         outdoor_categories.append(category)
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+    events = Events.query.all()
 
-    return render_template('site/all-records.html', bow_types=bow_types, indoor_categories=indoor_categories,
-                           outdoor_categories=outdoor_categories)
+    return render_template('site/all-records.html', event_list=events, bow_types=bow_types,
+                           indoor_categories=indoor_categories, outdoor_categories=outdoor_categories)
 
 
 def get_key(item):

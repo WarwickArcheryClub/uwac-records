@@ -15,9 +15,9 @@ mod_site = Blueprint('site', __name__, url_prefix='/records')
 @mod_site.route('/', methods=['GET'])
 def home():
     categories_shot = db.session.query(IndividualRecords.bow_type.distinct().label('bow_type')).filter(
-        db.or_(IndividualRecords.round_name == 'Portsmouth', IndividualRecords.round_name == 'WA 18m',
-               IndividualRecords.round_name == 'WA 50m', IndividualRecords.round_name == 'WA 70m',
-               IndividualRecords.round_name.like('WA 1440%'))).order_by(db.desc(IndividualRecords.bow_type)).all()
+        db.or_(IndividualRecords.round_name == u'Portsmouth', IndividualRecords.round_name == u'WA 18m',
+               IndividualRecords.round_name == u'WA 50m', IndividualRecords.round_name == u'WA 70m',
+               IndividualRecords.round_name.like(u'WA 1440%'))).order_by(db.desc(IndividualRecords.bow_type)).all()
     categories = []
 
     for cat in categories_shot:
@@ -45,8 +45,9 @@ def home():
         categories.append(category)
 
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+    events = Events.query.all()
 
-    return render_template('site/search.html', bow_types=bow_types, categories=categories)
+    return render_template('site/search.html', events=events, bow_types=bow_types, categories=categories)
 
 
 @mod_site.route('/submit', methods=['POST'])

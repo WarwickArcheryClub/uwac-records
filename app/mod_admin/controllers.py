@@ -6,7 +6,7 @@ import bcrypt
 import requests
 from app import app, db, mail
 from app.mod_site.controllers import is_integer, is_date, is_category, category_map
-from app.models import Users, QueuedScores, Scores, NewArchers, Archers, BowTypes, Rounds, Events
+from app.models import Users, QueuedScores, Scores, NewArchers, Archers, BowTypes, Rounds, Events, WingEntries
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_mail import Message
@@ -48,6 +48,7 @@ def approve_score(score_id):
 
 
 @mod_admin.route('/score/add', methods=['GET'])
+@login_required
 def add_score():
     return render_template('admin/score-add.html', bow_types=BowTypes.query.order_by(db.desc(BowTypes.id)).all())
 
@@ -338,6 +339,8 @@ def import_members():
 
     genderize = Genderize()
 
+    # TODO: Handle when genderize is offline
+
     for chunk in chunks(new_archers, 10):
         result = zip(chunk, genderize.get(map(get_first_name, chunk)))
         for item in result:
@@ -398,6 +401,53 @@ def login():
         return redirect(url_for('.dashboard'))
 
     return render_template('admin/login.html')
+
+
+@mod_admin.route('/wings', methods=['GET'])
+@login_required
+def chicken_wings():
+    singles = WingEntries.query.get(1)
+    doubles = WingEntries.query.get(2)
+
+    # Check that the database has been initialised
+    if singles is None:
+        singles = WingEntries('Singles', 'Nobody', 'Infinite')
+        db.session.add(singles)
+        db.session.commit()
+
+    if doubles is None:
+        doubles = WingEntries('Doubles', 'Nobody', 'Infinite')
+        db.session.add(doubles)
+        db.session.commit()
+
+    return render_template('admin/wings_update.html', singles=singles, doubles=doubles)
+
+
+@mod_admin.route('/wings/update', methods=['POST'])
+@login_required
+def chicken_wings_update():
+    print request.form
+
+    if not request.form['singles-entrants'] or \
+            not request.form['singles-time'] or \
+            not request.form['doubles-entrants'] or \
+            not request.form['doubles-time']:
+        flash('Please make sure all info has been filled in', 'submission')
+        return redirect(url_for('.chicken_wings'))
+
+    singles = WingEntries.query.get(1)
+    doubles = WingEntries.query.get(2)
+
+    singles.entrants = request.form['singles-entrants']
+    singles.time = request.form['singles-time']
+
+    doubles.entrants = request.form['doubles-entrants']
+    doubles.time = request.form['doubles-time']
+
+    db.session.commit()
+
+    flash('Updated chicken wing challenge successfully', 'submission')
+    return redirect(url_for('.chicken_wings'))
 
 
 @mod_admin.route('/logout', methods=['GET'])

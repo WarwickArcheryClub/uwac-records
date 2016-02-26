@@ -221,6 +221,21 @@ class BowTypes(db.Model):
         return '<BowType id: {} name {}>'.format(self.id, self.name)
 
 
+class WingEntries(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Unicode(255), nullable=False)
+    entrants = db.Column(db.Unicode(255), nullable=False)
+    time = db.Column(db.Unicode(255), nullable=False)
+
+    def __init__(self, name, entrants, time):
+        self.name = name
+        self.entrants = entrants
+        self.time = time
+
+    def __repr__(self):
+        return '<Wings name: {}, entrants: {}, time: {}>'.format(self.name, self.entrants, self.time)
+
+
 class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode(255), nullable=False)

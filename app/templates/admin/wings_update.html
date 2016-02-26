@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'Submitted Scores List - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="small-12 columns">
+            {% with messages = get_flashed_messages(category_filter=['submission']) %}
+                {% if messages %}
+                    {% for msg in messages %}
+                        {% if 'success' in msg %}
+                            <div data-alert class="alert-box success radius">
+                                {{ msg }}
+                                <a href="#" class="close">&times;</a>
+                            </div>
+                        {% else %}
+                            <div data-alert class="alert-box alert radius">
+                                {{ msg }}
+                                <a href="#" class="close">&times;</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <section class="bottom-divider">
+                <h4>
+                    <a href="{{ url_for('admin.dashboard') }}"><i class="fa fa-caret-left"></i> Back to
+                        dashboard</a>
+                </h4>
+                <h1>Update chicken wing challenge</h1>
+            </section>
+            <section>
+                <form method="post" action="{{ url_for('admin.chicken_wings_update') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <h3>{{ singles.name }}</h3>
+                        </div>
+                        <div class="small-12 medium-8 columns">
+                            <label>
+                                Entrants
+                                <input type="text" class="radius" id="singles-entrants" name="singles-entrants"
+                                       value="{{ singles.entrants }}">
+                            </label>
+                        </div>
+                        <div class="small-12 medium-4 columns">
+                            <label>
+                                Time
+                                <input type="text" class="radius" id="singles-time" name="singles-time"
+                                       value="{{ singles.time }}">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <h3>{{ doubles.name }}</h3>
+                        </div>
+                        <div class="small-12 medium-8 columns">
+                            <label>
+                                Entrants
+                                <input type="text" class="radius" id="doubles-entrants" name="doubles-entrants"
+                                       value="{{ doubles.entrants }}">
+                            </label>
+                        </div>
+                        <div class="small-12 medium-4 columns">
+                            <label>
+                                Time
+                                <input type="text" class="radius" id="doubles-time" name="doubles-time"
+                                       value="{{ doubles.time }}">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <button class="button radius small pull-right" type="submit">Update</button>
+                        </div>
+                    </div>
+                </form>
+
+            </section>
+        </div>
+    </div>
+{% endblock %}

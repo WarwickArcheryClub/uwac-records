@@ -337,24 +337,27 @@ def import_members():
 
         new_archers.append(archer)
 
-    genderize = Genderize()
+    # genderize = Genderize()
 
     # TODO: Handle when genderize is offline
 
-    for chunk in chunks(new_archers, 10):
-        result = zip(chunk, genderize.get(map(get_first_name, chunk)))
-        for item in result:
-            new_archer, gender = item
-            try:
-                if float(gender['probability']) >= 0.5:
-                    assigned = Archers(new_archer.first_name, new_archer.last_name,
-                                       'M' if u'male' in gender['gender'] else 'F', new_archer.email,
-                                       new_archer.card_number, None)
-                    db.session.add(assigned)
-                else:
-                    db.session.add(new_archer)
-            except KeyError:
-                db.session.add(new_archer)
+    # for chunk in chunks(new_archers, 10):
+    #     result = zip(chunk, genderize.get(map(get_first_name, chunk)))
+    #     for item in result:
+    #         new_archer, gender = item
+    #         try:
+    #             if float(gender['probability']) >= 0.5:
+    #                 assigned = Archers(new_archer.first_name, new_archer.last_name,
+    #                                    'M' if u'male' in gender['gender'] else 'F', new_archer.email,
+    #                                    new_archer.card_number, None)
+    #                 db.session.add(assigned)
+    #             else:
+    #                 db.session.add(new_archer)
+    #         except KeyError:
+    #             db.session.add(new_archer)
+
+    for new_archer in new_archers:
+        db.session.add(new_archer)
 
     db.session.commit()
 

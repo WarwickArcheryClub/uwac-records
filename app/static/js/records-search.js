@@ -52,6 +52,7 @@ $(document).ready(function () {
         onSelect: function (x) {
             $(this).val(x.value);
             $("#search-data").val(JSON.stringify(x));
+            $("#submit-button").click();
         },
         zIndex: 94,
         ajaxSettings: {

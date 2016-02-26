@@ -222,7 +222,10 @@ def search():
             if not s_type or not s_id:
                 return abort(400)
             else:
-                return redirect('/records/{}/{}'.format(s_type, s_id))
+                if app.config['CHICKEN_WING_CHALLENGE_ENABLE'] and s_id is app.config['CHICKEN_WING_CHALLENGE_ID']:
+                    return redirect(url_for('.wings'))
+                else:
+                    return redirect('/records/{}/{}'.format(s_type, s_id))
     else:
         query = request.form['search']
 
@@ -410,6 +413,14 @@ def all_records():
 
     return render_template('site/all-records.html', event_list=events, bow_types=bow_types,
                            indoor_categories=indoor_categories, outdoor_categories=outdoor_categories)
+
+
+@mod_site.route('/wings')
+def wings():
+    bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
+    events = Events.query.all()
+
+    return render_template('site/wings.html', event_list=events, bow_types=bow_types)
 
 
 def get_key(item):

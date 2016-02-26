@@ -18,6 +18,11 @@ CSRF_ENABLED = True
 # Login session strength
 SESSION_PROTECTION = 'strong'
 
+# Chicken wing challenge settings
+CHICKEN_WING_CHALLENGE_ENABLE = False
+# Chicken wing challenge is a round in the database. If it is enabled, this is the round id
+CHICKEN_WING_CHALLENGE_ID = -1
+
 # Base URL for use in link construction
 SITE_URL = 'yourclubsweb.site'
 

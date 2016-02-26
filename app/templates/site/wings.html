@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'Chicken Wing Challenge - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block main_content %}
+    {% include "site/search-form.html" %}
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        var class_column = 6;
+        var csrftoken = "{{ csrf_token() }}"
+    </script>
+    <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sort-tables.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chutney.js') }}"></script>
+{% endblock %}

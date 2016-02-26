@@ -37,6 +37,7 @@
                             <th class="sort-header reverse">Experience</th>
                             <th>Classification</th>
                             <th class="sort-header">Date</th>
+                            <th class="sort-header">Event</th>
                             {% if current_user.is_authenticated %}
                                 <th>Actions</th>
                             {% endif %}
@@ -53,6 +54,7 @@
                                 <td>{{ score['category'] }}</td>
                                 <td>{{ score['classification'] if score['classification'] else '' }}</td>
                                 <td>{{ score['date'] }}</td>
+                                <td>{{ score.event.name }}</td>
                                 {% if current_user.is_authenticated %}
                                     <td>
                                         <a class="admin-action"

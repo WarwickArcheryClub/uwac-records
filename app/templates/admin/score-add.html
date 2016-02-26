@@ -26,16 +26,16 @@
             {% endwith %}
             <section class="bottom-divider">
                 <h4>
-                    <h4><a href="{{ url_for('admin.dashboard') }}"><i class="fa fa-caret-left"></i> Back to
+                    <a href="{{ url_for('admin.dashboard') }}"><i class="fa fa-caret-left"></i> Back to
                         dashboard</a>
-                    </h4>
+                </h4>
 
-                    <h1>Add new score</h1>
+                <h1>Add new score</h1>
             </section>
             <form method="post" action="{{ url_for('admin.update_score') }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <input type="hidden" name="origin" value="{{ request.path + '?' + request.query_string }}"/>
-                <input type="hidden" name="score-id" value="-1" />
+                <input type="hidden" name="score-id" value="-1"/>
                 <input type="hidden" name="score-status" value="new"/>
 
                 <div class="row">

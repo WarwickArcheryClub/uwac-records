@@ -5,7 +5,8 @@ from time import strptime, mktime
 
 import Levenshtein as lev
 from app import mail, app
-from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classifications, Rounds, Events, QueuedScores
+from app.models import IndividualRecords, BowTypes, db, Archers, Scores, Classifications, Rounds, Events, QueuedScores, \
+    WingEntries
 from flask import Blueprint, render_template, request, redirect, flash, url_for, abort
 from flask_mail import Message
 
@@ -420,7 +421,10 @@ def wings():
     bow_types = BowTypes.query.order_by(db.desc(BowTypes.name)).all()
     events = Events.query.all()
 
-    return render_template('site/wings.html', event_list=events, bow_types=bow_types)
+    singles = WingEntries.query.get(1)
+    doubles = WingEntries.query.get(2)
+
+    return render_template('site/wings.html', event_list=events, bow_types=bow_types, singles=singles, doubles=doubles)
 
 
 def get_key(item):

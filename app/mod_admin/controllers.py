@@ -297,16 +297,34 @@ def export_scores():
     return render_template('admin/scores-export.html')
 
 
-@mod_admin.route('/members/edit', methods=['GET'])
-@login_required
-def edit_members():
-    return 'Blah'
-
-
-@mod_admin.route('/members/edit/<int:member_id>', methods=['GET'])
+@mod_admin.route('/members/edit/<int:member_id>', methods=['GET', 'POST'])
 @login_required
 def edit_member_id(member_id):
-    return 'Foobar'
+    if request.method in 'GET':
+        member = Archers.query.get_or_404(member_id)
+
+        return render_template('admin/member-edit.html', member=member)
+    else:
+        if not request.form['member-firstname'] or \
+                not request.form['member-lastname'] or \
+                not request.form['member-studentid'] or \
+                not request.form['member-email'] or \
+                not request.form['member-sex']:
+            flash('Make sure all required fields are filled in', 'submission')
+            return redirect(url_for('.edit_member_id', member_id=member_id))
+
+        member = Archers.query.get(member_id)
+
+        member.first_name = request.form['member-firstname']
+        member.last_name = request.form['member-lastname']
+        member.card_number = request.form['member-studentid']
+        member.agb_card = request.form['member-agbnumber']
+        member.email = request.form['member-email']
+        member.gender = request.form['member-sex']
+
+        db.session.commit()
+        flash('Member updated successfully', 'submission')
+        return redirect(url_for('.edit_member_id', member_id=member_id))
 
 
 @mod_admin.route('/members/new', methods=['GET'])

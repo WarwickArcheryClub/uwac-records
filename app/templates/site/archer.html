@@ -9,7 +9,13 @@
     <div class="row">
         <div class="small-12 columns">
             <section>
-                <h1>Scores for {{ archer.get_name() }}</h1>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('admin.edit_member_id', member_id=archer.id) }}"><i class="fa fa-pencil"></i>
+                        Edit member</a>
+                {% endif %}
+                <h1>
+                    Scores for {{ archer.get_name() }}
+                </h1>
                 <h4>Jump to:</h4>
                 <ul>
                     {% for category in categories %}
@@ -19,7 +25,8 @@
                         </li>
                     {% endfor %}
                 </ul>
-                <p class="bottom-divider pad-bottom px-5"><strong>Note:</strong> Any classification with an asterix (<strong>*</strong>) needs to have been shot at a record-status event.</p>
+                <p class="bottom-divider pad-bottom px-5"><strong>Note:</strong> Any classification with an asterix
+                    (<strong>*</strong>) needs to have been shot at a record-status event.</p>
             </section>
             {% for category in categories %}
                 <section>

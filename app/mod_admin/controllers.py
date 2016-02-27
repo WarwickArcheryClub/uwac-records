@@ -10,7 +10,6 @@ from app.models import Users, QueuedScores, Scores, NewArchers, Archers, BowType
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_mail import Message
-from genderize import Genderize
 
 # Use the C ElementTree implementation where possible
 try:
@@ -296,6 +295,45 @@ def delete_score(score_id):
 @login_required
 def export_scores():
     return render_template('admin/scores-export.html')
+
+
+@mod_admin.route('/members/edit', methods=['GET'])
+@login_required
+def edit_members():
+    return 'Blah'
+
+
+@mod_admin.route('/members/edit/<int:member_id>', methods=['GET'])
+@login_required
+def edit_member_id(member_id):
+    return 'Foobar'
+
+
+@mod_admin.route('/members/new', methods=['GET'])
+@login_required
+def new_member():
+    return render_template('admin/member-add.html')
+
+
+@mod_admin.route('/members/new/add', methods=['POST'])
+@login_required
+def new_member_add():
+    if not request.form['member-firstname'] or \
+            not request.form['member-lastname'] or \
+            not request.form['member-studentid'] or \
+            not request.form['member-email'] or \
+            not request.form['member-sex']:
+        flash('Make sure all required fields are filled in', 'submission')
+        return redirect(url_for('.new_member'))
+
+    member = Archers(request.form['member-firstname'], request.form['member-lastname'], request.form['member-sex'],
+                     request.form['member-email'], request.form['member-studentid'], request.form['member-agbnumber'])
+
+    db.session.add(member)
+    db.session.commit()
+    flash('Member added successfully', 'submission')
+
+    return redirect(url_for('.new_member'))
 
 
 @mod_admin.route('/members/import', methods=['GET'])

@@ -1,19 +1,15 @@
+from datetime import date
 from threading import Thread
 from time import strptime, mktime
-from datetime import date
 
+import bcrypt
+import requests
+from app import app, db, mail
+from app.mod_site.controllers import is_integer, is_date, is_category, category_map
+from app.models import Users, QueuedScores, Scores, NewArchers, Archers, BowTypes, Rounds, Events, WingEntries
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_mail import Message
-from app.mod_site.controllers import is_integer, is_date, is_category, category_map
-from app.models import Users, QueuedScores, Scores, NewArchers, Archers, BowTypes, Rounds, Events
-from app import app, db, mail
-from genderize import Genderize
-import requests
-import bcrypt
-
-
-
 
 # Use the C ElementTree implementation where possible
 try:
@@ -51,6 +47,7 @@ def approve_score(score_id):
 
 
 @mod_admin.route('/score/add', methods=['GET'])
+@login_required
 def add_score():
     return render_template('admin/score-add.html', bow_types=BowTypes.query.order_by(db.desc(BowTypes.id)).all())
 
@@ -300,6 +297,63 @@ def export_scores():
     return render_template('admin/scores-export.html')
 
 
+@mod_admin.route('/members/edit/<int:member_id>', methods=['GET', 'POST'])
+@login_required
+def edit_member_id(member_id):
+    if request.method in 'GET':
+        member = Archers.query.get_or_404(member_id)
+
+        return render_template('admin/member-edit.html', member=member)
+    else:
+        if not request.form['member-firstname'] or \
+                not request.form['member-lastname'] or \
+                not request.form['member-studentid'] or \
+                not request.form['member-email'] or \
+                not request.form['member-sex']:
+            flash('Make sure all required fields are filled in', 'submission')
+            return redirect(url_for('.edit_member_id', member_id=member_id))
+
+        member = Archers.query.get(member_id)
+
+        member.first_name = request.form['member-firstname']
+        member.last_name = request.form['member-lastname']
+        member.card_number = request.form['member-studentid']
+        member.agb_card = request.form['member-agbnumber']
+        member.email = request.form['member-email']
+        member.gender = request.form['member-sex']
+
+        db.session.commit()
+        flash('Member updated successfully', 'submission')
+        return redirect(url_for('.edit_member_id', member_id=member_id))
+
+
+@mod_admin.route('/members/new', methods=['GET'])
+@login_required
+def new_member():
+    return render_template('admin/member-add.html')
+
+
+@mod_admin.route('/members/new/add', methods=['POST'])
+@login_required
+def new_member_add():
+    if not request.form['member-firstname'] or \
+            not request.form['member-lastname'] or \
+            not request.form['member-studentid'] or \
+            not request.form['member-email'] or \
+            not request.form['member-sex']:
+        flash('Make sure all required fields are filled in', 'submission')
+        return redirect(url_for('.new_member'))
+
+    member = Archers(request.form['member-firstname'], request.form['member-lastname'], request.form['member-sex'],
+                     request.form['member-email'], request.form['member-studentid'], request.form['member-agbnumber'])
+
+    db.session.add(member)
+    db.session.commit()
+    flash('Member added successfully', 'submission')
+
+    return redirect(url_for('.new_member'))
+
+
 @mod_admin.route('/members/import', methods=['GET'])
 @login_required
 def import_members():
@@ -310,15 +364,15 @@ def import_members():
     new_archers = []
 
     for child in root_element:
-        f_name = unicode(child.find('FirstName').text.title(), 'utf-8')
-        l_name = unicode(child.find('LastName').text.title(), 'utf-8')
+        f_name = child.find('FirstName').text.title()
+        l_name = child.find('LastName').text.title()
         try:
-            card_num = unicode(child.find('UniqueID').text, 'utf-8')
+            card_num = child.find('UniqueID').text
         except TypeError:
             card_num = None
 
         try:
-            email = unicode(child.find('EmailAddress').text, 'utf-8')
+            email = child.find('EmailAddress').text
         except TypeError:
             email = None
 
@@ -339,7 +393,25 @@ def import_members():
 
         new_archers.append(archer)
 
-    # TODO: Come up with new way of finding people's sex/gender
+    # genderize = Genderize()
+
+    # TODO: Handle when genderize is offline
+
+    # for chunk in chunks(new_archers, 10):
+    #     result = zip(chunk, genderize.get(map(get_first_name, chunk)))
+    #     for item in result:
+    #         new_archer, gender = item
+    #         try:
+    #             if float(gender['probability']) >= 0.5:
+    #                 assigned = Archers(new_archer.first_name, new_archer.last_name,
+    #                                    'M' if u'male' in gender['gender'] else 'F', new_archer.email,
+    #                                    new_archer.card_number, None)
+    #                 db.session.add(assigned)
+    #             else:
+    #                 db.session.add(new_archer)
+    #         except KeyError:
+    #             db.session.add(new_archer)
+
     for new_archer in new_archers:
         db.session.add(new_archer)
 
@@ -388,6 +460,53 @@ def login():
         return redirect(url_for('.dashboard'))
 
     return render_template('admin/login.html')
+
+
+@mod_admin.route('/wings', methods=['GET'])
+@login_required
+def chicken_wings():
+    singles = WingEntries.query.get(1)
+    doubles = WingEntries.query.get(2)
+
+    # Check that the database has been initialised
+    if singles is None:
+        singles = WingEntries('Singles', 'Nobody', 'Infinite')
+        db.session.add(singles)
+        db.session.commit()
+
+    if doubles is None:
+        doubles = WingEntries('Doubles', 'Nobody', 'Infinite')
+        db.session.add(doubles)
+        db.session.commit()
+
+    return render_template('admin/wings_update.html', singles=singles, doubles=doubles)
+
+
+@mod_admin.route('/wings/update', methods=['POST'])
+@login_required
+def chicken_wings_update():
+    print request.form
+
+    if not request.form['singles-entrants'] or \
+            not request.form['singles-time'] or \
+            not request.form['doubles-entrants'] or \
+            not request.form['doubles-time']:
+        flash('Please make sure all info has been filled in', 'submission')
+        return redirect(url_for('.chicken_wings'))
+
+    singles = WingEntries.query.get(1)
+    doubles = WingEntries.query.get(2)
+
+    singles.entrants = request.form['singles-entrants']
+    singles.time = request.form['singles-time']
+
+    doubles.entrants = request.form['doubles-entrants']
+    doubles.time = request.form['doubles-time']
+
+    db.session.commit()
+
+    flash('Updated chicken wing challenge successfully', 'submission')
+    return redirect(url_for('.chicken_wings'))
 
 
 @mod_admin.route('/logout', methods=['GET'])

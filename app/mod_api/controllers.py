@@ -1,11 +1,11 @@
 import json
 from datetime import date
 
-from flask import Blueprint, request, Response, abort
-from app import db
-from app.models import Rounds, Events, Archers, Scores
-from app.mod_site.controllers import condense_category
 import Levenshtein as Lev
+from app import db
+from app.mod_site.controllers import condense_category
+from app.models import Rounds, Events, Archers, Scores
+from flask import Blueprint, request, Response, abort
 
 mod_api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -56,7 +56,8 @@ def rounds_suggestions():
 
     query = request.form['query']
 
-    suggestions = map(SuggestionUtils.to_select2, Rounds.query.filter(Rounds.name.ilike(u'%{}%'.format(query))).all())
+    suggestions = map(SuggestionUtils.to_select2, Rounds.query.filter(db.and_(Rounds.name.ilike(u'%{}%'.format(query)),
+                                                                              Rounds.r_type != 'Wings')).all())
 
     response = Response(json.dumps({'results': sorted(suggestions, key=SuggestionUtils.get_select2_key,
                                                       cmp=lambda x, y: Lev.distance(x, query) - Lev.distance(y,

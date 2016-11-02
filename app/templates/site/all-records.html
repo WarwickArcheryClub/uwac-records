@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}All individual club records - University of Warwick Archery Club{% endblock %}
+
+{% block main_content %}
+    {% include "site/search-form.html" %}
+    <div class="row">
+        <div class="small-12 columns">
+            <h1>All individual club records</h1>
+            <ul class="tabs" data-tab>
+                <li class="tab-title active"><a href="#indoors">Indoors</a></li>
+                <li class="tab-title"><a href="#outdoors">Outdoors</a></li>
+            </ul>
+            <div class="tabs-content">
+                <div class="content active" id="indoors">
+                    {% for category in indoor_categories %}
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <h3 class="bottom-divider">{{ category['name'] }}</h3>
+                                <table class="full-width">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Round</th>
+                                        <th>Score/Golds</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for score in category['scores'] %}
+                                        <tr>
+                                        <td>{{ score.archer_name }}</td>
+                                        <td>{{ score.round_name }}</td>
+                                        <td>{{ "{}/{}".format(score.score, (score.num_golds if score.num_golds else 0)) }}</td>
+                                        <td>{{ "{} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies")) }}</td>
+                                        <td>{{ score.date }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="content" id="outdoors">
+                    {% for category in outdoor_categories %}
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <h3 class="bottom-divider">{{ category['name'] }}</h3>
+                                <table class="full-width">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Round</th>
+                                        <th>Score/Golds</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for score in category['scores'] %}
+                                        <tr>
+                                        <td>{{ score.archer_name }}</td>
+                                        <td>{{ score.round_name }}</td>
+                                        <td>{{ "{}/{}".format(score.score, (score.num_golds if score.num_golds else 0)) }}</td>
+                                        <td>{{ "{} {}".format(score.category, ("Gents" if score.gender == 'M' else "Ladies")) }}</td>
+                                        <td>{{ score.date }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}"
+    </script>
+    <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
+{% endblock %}

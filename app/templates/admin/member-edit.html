@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'Add Score - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="small-12 columns">
+            {% with messages = get_flashed_messages(category_filter=['submission']) %}
+                {% if messages %}
+                    {% for msg in messages %}
+                        {% if 'success' in msg %}
+                            <div data-alert class="alert-box success radius">
+                                {{ msg }}
+                                <a href="#" class="close">&times;</a>
+                            </div>
+                        {% else %}
+                            <div data-alert class="alert-box alert radius">
+                                {{ msg }}
+                                <a href="#" class="close">&times;</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <section class="bottom-divider">
+                <h4>
+                    <a href="{{ url_for('admin.dashboard') }}"><i class="fa fa-caret-left"></i> Back to
+                        dashboard</a>
+                </h4>
+                <h1>Edit member information</h1>
+                <p><strong>*</strong> denotes a required field</p>
+            </section>
+            <form class="padding-top" method="post" action="{{ url_for('admin.edit_member_id', member_id=member.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="row">
+                    <div class="small-12 medium-4 columns">
+                        <label>
+                            First name<strong>*</strong>
+                            <input class="radius" type="text" name="member-firstname" value="{{ member.first_name }}">
+                        </label>
+                    </div>
+                    <div class="small-12 medium-4 columns">
+                        <label>
+                            Last name<strong>*</strong>
+                            <input class="radius" type="text" name="member-lastname" value="{{ member.last_name }}">
+                        </label>
+                    </div>
+                    <div class="small-12 medium-4 columns">
+                        <label>
+                            Email address<strong>*</strong>
+                            <input class="radius" type="email" name="member-email" value="{{ member.email }}">
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>
+                            Sex<strong>*</strong>
+                            <select name="member-sex" class="radius">
+                                <option disabled>-- Please select an option --</option>
+                                <option value="M" {% if member.gender == 'M' %}selected{% endif %}>Male</option>
+                                <option value="F" {% if member.gender == 'F' %}selected{% endif %}>Female</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="small-12 medium-3 columns">
+                        <label>
+                            Student ID<strong>*</strong>
+                            <input class="radius" type="text" name="member-studentid" value="{{ member.card_number }}">
+                        </label>
+                    </div>
+                    <div class="small-12 medium-3 columns">
+                        <label>
+                            ArcheryGB number
+                            <input class="radius" type="text" name="member-agbnumber" value="{{ member.agb_card }}">
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <button class="button radius small pull-right" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}"
+    </script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+{% endblock %}

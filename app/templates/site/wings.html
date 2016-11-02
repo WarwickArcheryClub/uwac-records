@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'Chicken Wing Challenge - University of Warwick Archery Club' }}
+{% endblock %}
+
+{% block main_content %}
+    {% include "site/search-form.html" %}
+    <div class="row">
+        <div class="small-12 columns">
+            <section>
+                <h1>Chicken Wing Challenge</h1>
+                <p>
+                    And now for something completely different.
+                </p>
+                <p class="bottom-divider pad-bottom px-5">
+                    The chicken wing challenge is simply the challenge to eat Varsity's 50 chicken wing plate in the
+                    shortest amount of time. This can be done individually (singles) or as a pair (doubles). This must
+                    to be done at a club social to Varsity (as to be verifiable).
+                </p>
+            </section>
+            <section>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <h2>{{ singles.name }}</h2>
+                    </div>
+                    <div class="small-12 columns">
+                        <h5>
+                            <strong>{{ singles.entrants }}</strong> with a time of <strong>{{ singles.time }}</strong>
+                        </h5>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <h2>{{ doubles.name }}</h2>
+                    </div>
+                    <div class="small-12 columns">
+                        <h5>
+                            <strong>{{ doubles.entrants }}</strong> with a time of <strong>{{ doubles.time }}</strong>
+                        </h5>
+                    </div>
+                </div>
+            </section>
+            <p class="text-right"><a class="category-link" href="#top"><i class="fa fa-chevron-up"></i> Back to
+                the top</a></p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        var class_column = 6;
+        var csrftoken = "{{ csrf_token() }}"
+    </script>
+    <script src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/records-search.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chutney.js') }}"></script>
+{% endblock %}

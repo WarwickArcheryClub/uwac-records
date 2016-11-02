@@ -10,7 +10,7 @@
 {% block main_content %}
     {% include "site/search-form.html" %}
     <div class="row">
-        <section>
+        <section class="small-12 columns">
             <h1>Results for {{ query }}</h1>
             <h4>Jump to:</h4>
             <ul>
@@ -26,7 +26,7 @@
             </ul>
         </section>
         {% if archers %}
-            <section>
+            <section class="small-12 columns">
                 <h3 id="archers">Archers</h3>
                 {% for archer in archers %}
                     <a href="/records/archer/{{ archer.id }}" class="item-row">{{ archer.get_name() }}<span>View archer</span></a>
@@ -35,7 +35,7 @@
             </section>
         {% endif %}
         {% if rounds %}
-            <section>
+            <section class="small-12 columns">
                 <h3 id="rounds">Rounds</h3>
                 {% for round in rounds %}
                     <a href="/records/round/{{ round.id }}" class="item-row">{{ round.name }}<span>View round</span></a>
@@ -44,7 +44,7 @@
             </section>
         {% endif %}
         {% if events %}
-            <section>
+            <section class="small-12 columns">
                 <h3 id="events">Events</h3>
                 {% for event in events %}
                     <a href="/records/event/{{ event.id }}" class="item-row">{{ event.name }}<span>View event</span></a>

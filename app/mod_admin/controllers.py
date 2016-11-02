@@ -364,15 +364,15 @@ def import_members():
     new_archers = []
 
     for child in root_element:
-        f_name = unicode(child.find('FirstName').text.title(), 'utf-8')
-        l_name = unicode(child.find('LastName').text.title(), 'utf-8')
+        f_name = child.find('FirstName').text.title()
+        l_name = child.find('LastName').text.title()
         try:
-            card_num = unicode(child.find('UniqueID').text, 'utf-8')
+            card_num = child.find('UniqueID').text
         except TypeError:
             card_num = None
 
         try:
-            email = unicode(child.find('EmailAddress').text, 'utf-8')
+            email = child.find('EmailAddress').text
         except TypeError:
             email = None
 
